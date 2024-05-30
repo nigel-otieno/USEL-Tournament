@@ -1,6 +1,7 @@
 # tournament_app/urls.py
 from django.urls import path
 from .views import *
+from . import views
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -11,5 +12,7 @@ urlpatterns = [
     path('team/<int:team_id>/create_player/', player_create, name='player_create'),
     path('team/<int:pk>/', TeamDetailView.as_view(), name='team_detail'),
     path('player/<int:pk>/', PlayerDetailView.as_view(), name='player_detail'),
+    path('tournament/<int:tournament_id>/bracket/create/', views.bracket_create, name='bracket_create'),
+    path('tournament/<int:tournament_id>/bracket/display/', views.bracket_display, name='bracket_display'),
 
 ]

@@ -1,10 +1,9 @@
-<!-- templates/player_detail.html -->
 {% extends "base_generic.html" %}
 
 {% block title %}Player Details{% endblock %}
 
 {% block content %}
-<button onclick="history.back()" class="btn btn-secondary ">Back</button>
+<button onclick="history.back()" class="btn btn-secondary">Back</button>
 
 <div class="card mt-4">
     <div class="card-header">
@@ -14,6 +13,7 @@
         <p><strong>Age:</strong> {{ player.age }}</p>
         <p><strong>Emergency Contact:</strong> {{ player.emergency_contact_first_name }} {{ player.emergency_contact_last_name }}</p>
         <p><strong>Emergency Contact Phone Number:</strong> {{ player.emergency_contact_phone_number }}</p>
+        <p><strong>Address:</strong> {{ player.address }}</p> <!-- Added address field -->
         <p><strong>Country:</strong> {{ player.country }}</p>
         <p><strong>State/Province:</strong> {{ player.state_province }}</p>
         <p><strong>Zip Code:</strong> {{ player.zip_code }}</p>

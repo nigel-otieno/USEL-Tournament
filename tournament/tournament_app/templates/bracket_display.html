@@ -1,0 +1,16 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Display Bracket{% endblock %}
+
+{% block content %}
+<button onclick="history.back()" class="btn btn-secondary">Back</button>
+
+<div class="container mt-5">
+    <h2>Bracket for {{ tournament.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="shuffle" class="btn btn-primary">Shuffle Teams</button>
+    </form>
+    <pre>{{ bracket.show|safe }}</pre>
+</div>
+{% endblock %}

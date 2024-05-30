@@ -1,4 +1,3 @@
-<!-- templates/tournament_edit.html -->
 {% extends "base_generic.html" %}
 
 {% block title %}Edit Tournament{% endblock %}
@@ -8,7 +7,7 @@
 
 <div class="container mt-5">
     <h2>Edit Tournament: {{ tournament.name }}</h2>
-    <form method="post" action="">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Save Changes</button>

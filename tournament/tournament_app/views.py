@@ -1,9 +1,67 @@
-# tournament_app/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
-from .models import Tournament, Team, Players
+from .models import Tournament, Team, Players, Bracket
 from .forms import TournamentForm, TeamForm, PlayerForm
+from .bracket import Bracket as BracketClass
+import json
+
+@login_required
+def bracket_create(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    teams = [team.name for team in tournament.teams.all()]
+    
+    try:
+        bracket_instance = tournament.bracket
+        bracket_data = bracket_instance.state
+    except Bracket.DoesNotExist:
+        bracket_data = None
+    
+    if bracket_data:
+        bracket = BracketClass(teams, rounds=bracket_data['rounds'], lineup=bracket_data['lineup'])
+    else:
+        bracket = BracketClass(teams)
+    
+    if request.method == 'POST':
+        if 'shuffle' in request.POST:
+            bracket.shuffle()
+        elif 'update' in request.POST:
+            round_number = int(request.POST['round'])
+            team_names = request.POST['teams'].split(',')
+            bracket.update(round_number, team_names)
+        
+        bracket_state = {
+            'rounds': bracket.rounds,
+            'lineup': bracket.lineup
+        }
+        if bracket_data:
+            bracket_instance.state = bracket_state
+            bracket_instance.save()
+        else:
+            Bracket.objects.create(tournament=tournament, state=bracket_state)
+    
+    return render(request, 'bracket_create.html', {'bracket': bracket, 'tournament': tournament})
+
+
+@login_required
+def bracket_display(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    teams = [team.name for team in tournament.teams.all()]
+    
+    try:
+        bracket_instance = tournament.bracket
+        bracket_data = bracket_instance.state
+    except Bracket.DoesNotExist:
+        bracket_data = None
+    
+    if bracket_data:
+        bracket = BracketClass(teams)
+        bracket.rounds = bracket_data['rounds']
+        bracket.lineup = bracket_data['lineup']
+    else:
+        bracket = BracketClass(teams)
+    
+    return render(request, 'bracket_display.html', {'bracket': bracket, 'tournament': tournament})
 
 @login_required
 def tournament_edit(request, id):
@@ -13,7 +71,7 @@ def tournament_edit(request, id):
         return redirect('tournament_detail', pk=tournament.id)
 
     if request.method == 'POST':
-        form = TournamentForm(request.POST, instance=tournament)
+        form = TournamentForm(request.POST, request.FILES, instance=tournament)
         if form.is_valid():
             form.save()
             return redirect('tournament_detail', pk=tournament.id)
@@ -32,7 +90,7 @@ def team_create(request, tournament_id):
             team = form.save(commit=False)
             team.created_by = request.user
             team.save()
-            team.tournament.add(tournament)  # Associate the team with the specific tournament
+            team.tournament.add(tournament)
             return redirect('tournament_detail', pk=tournament.id)
     else:
         form = TeamForm()
@@ -54,7 +112,7 @@ def player_create(request, team_id):
         if form.is_valid():
             player = form.save(commit=False)
             player.save()
-            team.members.add(player)  # Add the player to the team
+            team.members.add(player)
             return redirect('team_detail', pk=team.id)
     else:
         form = PlayerForm()
@@ -64,7 +122,7 @@ def player_create(request, team_id):
 @login_required
 def player_detail(request, pk):
     player = get_object_or_404(Players, pk=pk)
-    team = player.teams.first()  # Assuming a player is only part of one team
+    team = player.teams.first()
     if request.user != team.created_by:
         return redirect('team_detail', pk=team.id)
     return render(request, 'player_detail.html', {'player': player})
