@@ -1,0 +1,54 @@
+<!-- templates/team_detail.html -->
+{% extends "base_generic.html" %}
+
+{% block title %}Team Details{% endblock %}
+
+{% block content %}
+<button onclick="history.back()" class="btn btn-secondary ">Back</button>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h2>{{ team.name }}</h2>
+        {% if user == team.created_by and team.members.count < 3 %}
+        <a href="{% url 'player_create' team.id %}" class="btn btn-success">Add Player</a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <p><strong>Video URL:</strong> 
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#videoModal">View Video</a>
+        </p>
+        <p><strong>Guardian Name:</strong> {{ team.guardian_name }}</p>
+        <p><strong>Guardian Contact:</strong> {{ team.guardian_contact }}</p>
+        <h3>Players</h3>
+        <ul class="list-group">
+            {% for player in team.members.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ player.first_name }} {{ player.last_name }}
+                {% if user == team.created_by or user == player.created_by %}
+                <a href="{% url 'player_detail' player.id %}" class="btn btn-info btn-sm">View Details</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="videoModalLabel">Video</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="{{ team.video_url }}" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

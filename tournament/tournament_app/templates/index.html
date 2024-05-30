@@ -1,0 +1,13 @@
+<!-- templates/index.html -->
+{% extends "base_generic.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to the Tournaments App</h1>
+    <p class="lead">This is the home page of the Tournaments App.</p>
+    <p class="lead">{{user.username}}</p>
+
+</div>
+{% endblock %}
