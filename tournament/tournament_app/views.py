@@ -6,6 +6,20 @@ from .forms import TournamentForm, TeamForm, PlayerForm
 from .bracket import Bracket as BracketClass
 import json
 
+
+@login_required
+def tournament_create(request):
+    if request.method == 'POST':
+        form = TournamentForm(request.POST)
+        if form.is_valid():
+            tournament = form.save(commit=False)
+            tournament.created_by = request.user
+            tournament.save()
+            return redirect('tournaments')  # Redirect to the list of tournaments
+    else:
+        form = TournamentForm()
+    return render(request, 'tournament_create.html', {'form': form})
+
 @login_required
 def bracket_create(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
