@@ -1,0 +1,64 @@
+<!-- templates/leaderboards.html -->
+{% extends "account/base_generic.html" %}
+
+{% block title %}Tournaments{% endblock %}
+
+{% block content %}
+<h1 class="mt-4 mb-3 text-primary">Tournaments</h1>
+<div class="row">
+    {% for tournament in tournaments %}
+    <div class="col-md-4 mb-4">
+        <div class="card border-primary shadow-lg h-100">
+            <div class="card-header bg-primary text-white rounded-top">
+                <h5 class="card-title m-0">{{ tournament.name }}</h5>
+            </div>
+            <div class="card-body bg-light rounded-bottom">
+                <p class="card-text"><strong>Tournament Host:</strong> {{ tournament.created_by }}</p>
+                <p class="card-text"><strong>Date:</strong> {{ tournament.date }}</p>
+                <p class="card-text"><strong>Location:</strong> {{ tournament.location }}</p>
+                <a href="{% url 'tournament_detail' tournament.id %}" class="btn btn-primary btn-block">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    body {
+        background-color: #e0e0e0;
+    }
+    h1 {
+        font-weight: bold;
+        text-align: center;
+    }
+    .card {
+        border-radius: 15px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card-header {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+    .card-body {
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+    .card-title {
+        font-weight: bold;
+        margin: 0;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+</style>
+{% endblock %}

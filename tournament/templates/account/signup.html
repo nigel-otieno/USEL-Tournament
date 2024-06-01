@@ -1,0 +1,50 @@
+{% extends "account/base_entrance.html" %}
+{% load allauth i18n %}
+{% block head_title %}
+    {% trans "Signup" %}
+{% endblock head_title %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h1 class="h3 mb-3 fw-normal">{% trans "Sign Up" %}</h1>
+                </div>
+                <div class="card-body">
+                    {% setvar link %}
+                        <a href="{{ login_url }}" class="text-decoration-none">
+                    {% endsetvar %}
+                    {% setvar end_link %}
+                        </a>
+                    {% endsetvar %}
+                    <p class="text-center">
+                        {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
+                    </p>
+                    {% if not SOCIALACCOUNT_ONLY %}
+                        {% url 'account_signup' as action_url %}
+                        <form method="post" action="{{ action_url }}">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group mb-3">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% endfor %}
+                            {{ redirect_field }}
+                            <button type="submit" class="btn btn-primary w-100">
+                                {% trans "Sign Up" %}
+                            </button>
+                        </form>
+                    {% endif %}
+                    {% if SOCIALACCOUNT_ENABLED %}
+                        <hr>
+                        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
