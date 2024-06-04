@@ -10,12 +10,12 @@ import json
 @login_required
 def tournament_create(request):
     if request.method == 'POST':
-        form = TournamentForm(request.POST)
+        form = TournamentForm(request.POST, request.FILES)
         if form.is_valid():
             tournament = form.save(commit=False)
             tournament.created_by = request.user
             tournament.save()
-            return redirect('tournaments')  # Redirect to the list of tournaments
+            return redirect('tournament_detail', tournament.id)  # Change this to your detail view
     else:
         form = TournamentForm()
     return render(request, 'tournament_create.html', {'form': form})

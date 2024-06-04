@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-
+{% load static %}
 {% block title %}Tournaments{% endblock %}
 
 {% block content %}
@@ -15,13 +15,11 @@
     {% for tournament in tournaments %}
     <div class="col-md-4 mb-4">
         <div class="card">
-            {% comment %}
             {% if tournament.image %}
-                <img src="{{ tournament.image.url }}" class="card-img-top" alt="{{ tournament.name }}">
+                <img src="{{ tournament.image.url }}" class="card-img-top tournament-image" alt="{{ tournament.name }}">
             {% else %}
-                <img src="{% static 'path/to/robot.jpg' %}" class="card-img-top" alt="No Image Available">
+                <img src="{% static 'tournament_app/images/robot.png' %}" class="card-img-top tournament-image" alt="No Image Available">
             {% endif %}
-            {% endcomment %}
             <div class="card-body">
                 <h5 class="card-title">{{ tournament.name }}</h5>
                 <p class="card-text"><strong>Tournament Host: </strong> {{ tournament.created_by }}</p>

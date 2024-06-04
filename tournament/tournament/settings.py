@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -159,9 +159,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
+# Static files (CSS, JavaScript, Images)
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "tournament_app/static"]
+# URL to use when referring to static files located in STATIC_ROOT
+STATIC_URL = '/static/'
+
+# Additional locations the staticfiles app will traverse
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Directory where collectstatic will collect static files for deployment
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files (Uploaded by users)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

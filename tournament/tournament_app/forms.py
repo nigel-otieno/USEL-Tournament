@@ -4,7 +4,7 @@ from .models import Tournament, Team, Players, Bracket
 class TournamentForm(forms.ModelForm):
     class Meta:
         model = Tournament
-        fields = ['name', 'date', 'time', 'location', 'image']
+        fields = ['name', 'date', 'time', 'image', 'location']
 
 class TeamForm(forms.ModelForm):
     class Meta:
