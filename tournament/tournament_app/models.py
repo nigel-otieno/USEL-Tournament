@@ -1,6 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class GameMode(models.Model):
+    GAME_MODE_CHOICES = [
+        ('TA', 'Time Attack'),
+        ('VAR', 'Variations in Set Rounds'),
+        ('SRHS', 'Single Round Highest Score'),
+        ('HTV', 'Hybrid of Time and Variations in Set Rounds'),
+        ('HTSRHS', 'Hybrid of Time and Single Round Highest Score'),
+    ]
+    
+    name = models.CharField(max_length=100, choices=GAME_MODE_CHOICES)
+    description = models.TextField(blank=True, null=True)
+    time_limit = models.DurationField(null=True, blank=True)  # For time-based modes
+    max_rounds = models.IntegerField(null=True, blank=True)  # For round-based modes
+    score_limit = models.IntegerField(null=True, blank=True)  # For highest score modes
+
+    def __str__(self):
+        return self.get_name_display()
+    
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
@@ -8,6 +26,7 @@ class Tournament(models.Model):
     image = models.ImageField(upload_to='tournament_images/', null=True, blank=True)
     location = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tournaments')
+    game_mode = models.ForeignKey(GameMode, on_delete=models.CASCADE, related_name='tournaments', null=True, blank=True)
 
     def __str__(self):
         return self.name

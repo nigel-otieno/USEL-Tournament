@@ -1,0 +1,16 @@
+{% extends 'base_generic.html' %}
+{% block title %}Select Game Mode{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Select Game Mode</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for game_mode in form.fields.name.choices %}
+            <button type="submit" name="name" value="{{ game_mode.0 }}" class="btn btn-primary mb-2">{{ game_mode.1 }}</button>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+{% endblock %}

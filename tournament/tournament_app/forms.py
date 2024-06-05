@@ -1,10 +1,15 @@
 from django import forms
-from .models import Tournament, Team, Players, Bracket
+from .models import *
 
 class TournamentForm(forms.ModelForm):
     class Meta:
         model = Tournament
-        fields = ['name', 'date', 'time', 'image', 'location']
+        fields = ['name', 'date', 'time', 'location', 'image']
+
+class GameModeSelectionForm(forms.ModelForm):
+    class Meta:
+        model = GameMode
+        fields = ['name']
 
 class TeamForm(forms.ModelForm):
     class Meta:

@@ -1,24 +1,38 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
-from .models import Tournament, Team, Players, Bracket
-from .forms import TournamentForm, TeamForm, PlayerForm
+from .models import *
+from .forms import *
 from .bracket import Bracket as BracketClass
 import json
 
 
 @login_required
-def tournament_create(request):
+def game_mode_selection(request):
+    if request.method == 'POST':
+        form = GameModeSelectionForm(request.POST)
+        if form.is_valid():
+            game_mode = form.cleaned_data['name']
+            return redirect('tournament_create', game_mode=game_mode)
+    else:
+        form = GameModeSelectionForm()
+    return render(request, 'game_mode_selection.html', {'form': form})
+
+@login_required
+def tournament_create(request, game_mode):
+    game_mode_instance = get_object_or_404(GameMode, name=game_mode)
     if request.method == 'POST':
         form = TournamentForm(request.POST, request.FILES)
         if form.is_valid():
             tournament = form.save(commit=False)
             tournament.created_by = request.user
+            tournament.game_mode = game_mode_instance
             tournament.save()
-            return redirect('tournament_detail', tournament.id)  # Change this to your detail view
+            return redirect('tournament_detail', tournament.id)
     else:
         form = TournamentForm()
-    return render(request, 'tournament_create.html', {'form': form})
+    return render(request, 'tournament_create.html', {'form': form, 'game_mode': game_mode_instance})
+
 
 @login_required
 def bracket_create(request, tournament_id):
@@ -143,7 +157,11 @@ def player_detail(request, pk):
 
 class IndexView(TemplateView):
     template_name = 'index.html'
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tournaments'] = Tournament.objects.all()
+        return context
 class TournamentsView(ListView):
     model = Tournament
     template_name = 'tournaments.html'

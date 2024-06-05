@@ -7,7 +7,7 @@
     <h1 class="mt-4 mb-3">Tournaments</h1>
     {% if user.is_authenticated %}
     <div class="text-right">
-        <a href="{% url 'tournament_create' %}" class="btn btn-success">Create Tournament</a>
+        <a href="{% url 'game_mode_selection' %}" class="btn btn-success">Create Tournament</a>
     </div>
     {% endif %}
 </div>
@@ -16,9 +16,9 @@
     <div class="col-md-4 mb-4">
         <div class="card">
             {% if tournament.image %}
-                <img src="{{ tournament.image.url }}" class="card-img-top tournament-image" alt="{{ tournament.name }}">
+                <img src="{{ tournament.image.url }}" class="card-img-top" alt="{{ tournament.name }}">
             {% else %}
-                <img src="{% static 'tournament_app/images/robot.png' %}" class="card-img-top tournament-image" alt="No Image Available">
+                <img src="{% static 'tournament_app/images/robot.png' %}" class="card-img-top" alt="No Image Available">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ tournament.name }}</h5>
