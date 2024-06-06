@@ -7,8 +7,8 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            {% for game_mode in form.fields.name.choices %}
-            <button type="submit" name="name" value="{{ game_mode.0 }}" class="btn btn-primary mb-2">{{ game_mode.1 }}</button>
+            {% for value, display in form.fields.game_mode.choices %}
+            <button type="submit" name="game_mode" value="{{ value }}" class="btn btn-primary mb-2">{{ display }}</button>
             {% endfor %}
         </div>
     </form>

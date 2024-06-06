@@ -12,7 +12,7 @@ def game_mode_selection(request):
     if request.method == 'POST':
         form = GameModeSelectionForm(request.POST)
         if form.is_valid():
-            game_mode = form.cleaned_data['name']
+            game_mode = form.cleaned_data['game_mode']
             return redirect('tournament_create', game_mode=game_mode)
     else:
         form = GameModeSelectionForm()
@@ -20,18 +20,38 @@ def game_mode_selection(request):
 
 @login_required
 def tournament_create(request, game_mode):
-    game_mode_instance = get_object_or_404(GameMode, name=game_mode)
+    game_mode_instance = None
+    if game_mode == 'TimeBasedGameMode':
+        GameModeForm = TimeBasedGameModeForm
+    elif game_mode == 'ScoreBasedGameMode':
+        GameModeForm = ScoreBasedGameModeForm
+    elif game_mode == 'HybridGameMode':
+        GameModeForm = HybridGameModeForm
+    else:
+        raise ValueError("Invalid game mode")
+
     if request.method == 'POST':
         form = TournamentForm(request.POST, request.FILES)
-        if form.is_valid():
+        game_mode_form = GameModeForm(request.POST)
+        if form.is_valid() and game_mode_form.is_valid():
             tournament = form.save(commit=False)
             tournament.created_by = request.user
-            tournament.game_mode = game_mode_instance
+            game_mode_instance = game_mode_form.save(commit=False)
+            game_mode_instance.created_by = request.user
+            game_mode_instance.save()
+            tournament.game_mode_type = ContentType.objects.get_for_model(game_mode_instance)
+            tournament.game_mode_id = game_mode_instance.id
             tournament.save()
-            return redirect('tournament_detail', tournament.id)
+            return redirect('tournament_detail', pk=tournament.pk)
     else:
         form = TournamentForm()
-    return render(request, 'tournament_create.html', {'form': form, 'game_mode': game_mode_instance})
+        game_mode_form = GameModeForm()
+
+    return render(request, 'tournament_create.html', {
+        'form': form,
+        'game_mode_form': game_mode_form,
+        'game_mode': game_mode
+    })
 
 
 @login_required
@@ -170,7 +190,17 @@ class TournamentsView(ListView):
 class TournamentDetailView(DetailView):
     model = Tournament
     template_name = 'tournament_detail.html'
-    context_object_name = 'tournament'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tournament = self.get_object()
+        game_mode = None
+
+        if tournament.game_mode_type and tournament.game_mode_id:
+            game_mode = tournament.game_mode_type.get_object_for_this_type(id=tournament.game_mode_id)
+
+        context['game_mode'] = game_mode
+        return context
 
 class TeamDetailView(DetailView):
     model = Team

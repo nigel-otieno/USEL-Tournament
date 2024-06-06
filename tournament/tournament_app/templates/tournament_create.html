@@ -3,12 +3,13 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Create Tournament</h2>
+    <h2>Create a New Tournament</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="hidden" name="game_mode" value="{{ game_mode.name }}">
-        <button type="submit" class="btn btn-success">Create</button>
+        <h3>Game Mode Details</h3>
+        {{ game_mode_form.as_p }}
+        <button type="submit" class="btn btn-primary">Create Tournament</button>
     </form>
 </div>
 {% endblock %}

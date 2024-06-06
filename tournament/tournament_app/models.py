@@ -1,24 +1,61 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
-class GameMode(models.Model):
-    GAME_MODE_CHOICES = [
-        ('TA', 'Time Attack'),
-        ('VAR', 'Variations in Set Rounds'),
-        ('SRHS', 'Single Round Highest Score'),
-        ('HTV', 'Hybrid of Time and Variations in Set Rounds'),
-        ('HTSRHS', 'Hybrid of Time and Single Round Highest Score'),
+class TimeBasedGameMode(models.Model):
+    ROUND_CHOICES = [
+        (1, '1 Round'),
+        (2, '2 Rounds'),
+        (3, '3 Rounds'),
     ]
-    
-    name = models.CharField(max_length=100, choices=GAME_MODE_CHOICES)
+
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    time_limit = models.DurationField(null=True, blank=True)  # For time-based modes
-    max_rounds = models.IntegerField(null=True, blank=True)  # For round-based modes
-    score_limit = models.IntegerField(null=True, blank=True)  # For highest score modes
+    event_date = models.DateField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_based_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+    time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
 
     def __str__(self):
-        return self.get_name_display()
-    
+        return self.name
+
+class ScoreBasedGameMode(models.Model):
+    ROUND_CHOICES = [
+        (1, '1 Round'),
+        (2, '2 Rounds'),
+        (3, '3 Rounds'),
+    ]
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    event_date = models.DateField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='score_based_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+
+    def __str__(self):
+        return self.name
+
+class HybridGameMode(models.Model):
+    ROUND_CHOICES = [
+        (1, '1 Round'),
+        (2, '2 Rounds'),
+        (3, '3 Rounds'),
+    ]
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    event_date = models.DateField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hybrid_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+    time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
@@ -26,7 +63,10 @@ class Tournament(models.Model):
     image = models.ImageField(upload_to='tournament_images/', null=True, blank=True)
     location = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tournaments')
-    game_mode = models.ForeignKey(GameMode, on_delete=models.CASCADE, related_name='tournaments', null=True, blank=True)
+
+    game_mode_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    game_mode_id = models.PositiveIntegerField(null=True, blank=True)
+    game_mode = GenericForeignKey('game_mode_type', 'game_mode_id')
 
     def __str__(self):
         return self.name
@@ -42,7 +82,7 @@ class Players(models.Model):
     country = models.CharField(max_length=100)
     state_province = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=10)
-    
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -57,13 +97,6 @@ class Team(models.Model):
     video_url = models.URLField(max_length=250, blank=True, null=True)
     guardian_name = models.CharField(max_length=255, blank=True, null=True)
     guardian_contact = models.CharField(max_length=15, blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
-
-class Bracket(models.Model):
-    tournament = models.OneToOneField(Tournament, on_delete=models.CASCADE, related_name='bracket')
-    state = models.JSONField()
-
-    def __str__(self):
-        return f"Bracket for {self.tournament.name}"

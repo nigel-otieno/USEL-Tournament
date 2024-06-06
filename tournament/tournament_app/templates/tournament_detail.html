@@ -27,6 +27,18 @@
             <p><strong>Date:</strong> {{ tournament.date }}</p>
             <p><strong>Time:</strong> {{ tournament.time }}</p>
             <p><strong>Location:</strong> {{ tournament.location }}</p>
+
+            {% if tournament.game_mode %}
+            <h3>Game Mode Details</h3>
+            <p><strong>Game Mode: </strong> {{ tournament.game_mode.name }}</p>
+            <p><strong>Description: </strong> {{ tournament.game_mode.description }}</p>
+            <p><strong>Event Date: </strong> {{ tournament.game_mode.event_date }}</p>
+            <p><strong>Rounds: </strong> {{ tournament.game_mode.rounds }}</p>
+            {% if tournament.game_mode.time_score %}
+            <p><strong>Time Score: </strong> {{ tournament.game_mode.time_score }}</p>
+            {% endif %}
+            {% endif %}
+
             {% if user == tournament.created_by %}
             <a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">Edit Tournament</a>
             {% endif %}
