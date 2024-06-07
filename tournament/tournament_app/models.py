@@ -12,7 +12,6 @@ class TimeBasedGameMode(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    event_date = models.DateField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_based_created')
     created_at = models.DateTimeField(auto_now_add=True)
     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
@@ -30,7 +29,6 @@ class ScoreBasedGameMode(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    event_date = models.DateField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='score_based_created')
     created_at = models.DateTimeField(auto_now_add=True)
     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
@@ -47,7 +45,6 @@ class HybridGameMode(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    event_date = models.DateField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hybrid_created')
     created_at = models.DateTimeField(auto_now_add=True)
     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")

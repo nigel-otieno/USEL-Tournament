@@ -17,17 +17,17 @@ class GameModeSelectionForm(forms.Form):
 class TimeBasedGameModeForm(forms.ModelForm):
     class Meta:
         model = TimeBasedGameMode
-        fields = ['name', 'description', 'event_date', 'rounds', 'time_score']
+        fields = ['name', 'description',  'rounds', 'time_score']
 
 class ScoreBasedGameModeForm(forms.ModelForm):
     class Meta:
         model = ScoreBasedGameMode
-        fields = ['name', 'description', 'event_date', 'rounds']
+        fields = ['name', 'description',  'rounds']
 
 class HybridGameModeForm(forms.ModelForm):
     class Meta:
         model = HybridGameMode
-        fields = ['name', 'description', 'event_date', 'rounds', 'time_score']
+        fields = ['name', 'description',  'rounds', 'time_score']
 
 
 class TeamForm(forms.ModelForm):

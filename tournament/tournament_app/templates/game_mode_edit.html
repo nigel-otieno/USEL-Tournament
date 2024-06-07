@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Edit Game Mode{% endblock %}
+
+{% block content %}
+<button onclick="history.back()" class="btn btn-secondary">Back</button>
+
+<div class="container mt-5">
+    <h2>Edit Game Mode: {{ game_mode.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ game_mode_form.as_p }}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

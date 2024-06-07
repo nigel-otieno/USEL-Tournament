@@ -16,4 +16,7 @@ urlpatterns = [
     path('tournament/<int:tournament_id>/bracket/display/', views.bracket_display, name='bracket_display'),
     path('tournament/create/', game_mode_selection, name='game_mode_selection'),
     path('tournament/create/<str:game_mode>/', views.tournament_create, name='tournament_create'),
+    path('tournament/<int:tournament_id>/game_mode/edit/', views.game_mode_edit, name='game_mode_edit'),
+    path('tournament/<int:tournament_id>/delete/', tournament_delete, name='tournament_delete'),
+
 ]
