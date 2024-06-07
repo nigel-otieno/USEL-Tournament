@@ -219,6 +219,17 @@ def team_create(request, tournament_id):
     return render(request, 'team_create.html', {'form': form, 'tournament': tournament})
 
 @login_required
+def upload_video(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    if request.user == team.created_by or request.user in team.members.all():
+        if request.method == 'POST':
+            form = TeamForm(request.POST, instance=team)
+            if form.is_valid():
+                form.save()
+                return redirect('team_detail', pk=team.id)
+    return redirect('team_detail', pk=team.id)
+
+@login_required
 def player_create(request, team_id):
     team = get_object_or_404(Team, id=team_id)
 
