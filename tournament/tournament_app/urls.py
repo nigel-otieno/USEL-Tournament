@@ -11,6 +11,7 @@ urlpatterns = [
     path('tournament/<int:tournament_id>/create_team/', team_create, name='team_create'),
     path('team/<int:team_id>/create_player/', player_create, name='player_create'),
     path('team/<int:pk>/', TeamDetailView.as_view(), name='team_detail'),
+    path('team/<int:team_id>/upload_video/', views.upload_video, name='upload_video'),
     path('player/<int:pk>/', PlayerDetailView.as_view(), name='player_detail'),
     path('tournament/<int:tournament_id>/bracket/create/', views.bracket_create, name='bracket_create'),
     path('tournament/<int:tournament_id>/bracket/display/', views.bracket_display, name='bracket_display'),
