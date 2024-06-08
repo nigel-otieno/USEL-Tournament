@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import *
 from .forms import *
-import json
 from .bracket import Bracket
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 
 @login_required
 def tournament_delete(request, tournament_id):
@@ -221,13 +221,16 @@ def team_create(request, tournament_id):
 @login_required
 def upload_video(request, team_id):
     team = get_object_or_404(Team, id=team_id)
-    if request.user == team.created_by or request.user in team.members.all():
-        if request.method == 'POST':
-            form = TeamForm(request.POST, instance=team)
-            if form.is_valid():
-                form.save()
-                return redirect('team_detail', pk=team.id)
+    if request.user != team.created_by:
+        return HttpResponseForbidden("You are not allowed to upload a video for this team.")
+
+    if request.method == 'POST':
+        video_url = request.POST.get('video_url')
+        team.video_url = video_url
+        team.save()
+        return redirect('team_detail', pk=team.id)
     return redirect('team_detail', pk=team.id)
+
 
 @login_required
 def player_create(request, team_id):

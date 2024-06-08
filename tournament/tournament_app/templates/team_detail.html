@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% load custom_filters %}
 
 {% block title %}Team Details{% endblock %}
 
@@ -14,7 +15,11 @@
     </div>
     <div class="card-body">
         <p><strong>Video URL:</strong> 
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#videoModal">View Video</a>
+            {% if team.video_url %}
+            <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary">View Video</a>
+            {% else %}
+            <span>No video available.</span>
+            {% endif %}
         </p>
         {% if user == team.created_by or user in team.members.all %}
           <p><strong>Upload Video</strong>
@@ -35,25 +40,6 @@
             {% endfor %}
         </ul>
     </div>
-</div>
-
-<!-- Video Modal -->
-<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="videoModalLabel">Video</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="embed-responsive embed-responsive-16by9">
-          <iframe class="embed-responsive-item" src="{{ team.video_url }}" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- Upload Video Modal -->
