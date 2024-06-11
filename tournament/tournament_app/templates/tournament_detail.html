@@ -33,35 +33,38 @@
             <p><strong>Time:</strong> {{ tournament.time }}</p>
             <p><strong>Location:</strong> {{ tournament.location }}</p>
 
-            {% if tournament.game_mode %}
+            {% if game_mode %}
             <h3>Game Mode Details</h3>
-            <p><strong>Game Mode: </strong> {{ tournament.game_mode.name }}</p>
-            <p><strong>Description: </strong> {{ tournament.game_mode.description }}</p>
-            <p><strong>Event Date: </strong> {{ tournament.game_mode.event_date }}</p>
-            <p><strong>Rounds: </strong> {{ tournament.game_mode.rounds }}</p>
-            {% if tournament.game_mode.time_score %}
-            <p><strong>Time Score: </strong> {{ tournament.game_mode.time_score }}</p>
+            <p><strong>Game Mode: </strong> {{ game_mode.name }}</p>
+            <p><strong>Description: </strong> {{ game_mode.description }}</p>
+            <p><strong>Rounds: </strong> {{ game_mode_details.rounds }}</p>
+            {% if game_mode_details.time_score %}
+            <p><strong>Time Score: </strong> {{ game_mode_details.time_score }}</p>
             {% endif %}
             {% endif %}
 
             {% if user == tournament.created_by %}
             <a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">Edit Tournament</a>
             {% endif %}
+
             <h3>Teams</h3>
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead>
+                    <thead id="team-table-header">
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
                             <th>Score One</th>
                             <th>Score Two</th>
                             <th>Score Three</th>
+                            {% if game_mode_details.time_score %}
+                            <th>Time Score</th>
+                            {% endif %}
                             <th>Total Score</th>
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="team-table-body">
                         {% for team in tournament.teams.all %}
                         <tr>
                             <td>{{ team.id }}</td>
@@ -69,6 +72,9 @@
                             <td>{{ team.score_one }}</td>
                             <td>{{ team.score_two }}</td>
                             <td>{{ team.score_three }}</td>
+                            {% if game_mode_details.time_score %}
+                            <td>{{ team.time_score }}</td>
+                            {% endif %}
                             <td>{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}</td>
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
