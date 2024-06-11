@@ -43,3 +43,8 @@ class PlayerForm(forms.ModelForm):
             'emergency_contact_last_name', 'emergency_contact_phone_number',
             'country', 'state_province', 'zip_code', 'address'
         ]
+
+class BracketForm(forms.ModelForm):
+    class Meta:
+        model = Bracket
+        fields = ['tournament', 'team', 'state']

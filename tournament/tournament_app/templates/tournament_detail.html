@@ -10,12 +10,9 @@
         </div>
         <div class="col-md-6 text-right">
             {% if user.is_authenticated and user == tournament.created_by %}
-                <a href="{% url 'bracket_create' tournament.id %}" class="btn btn-info">Edit Bracket</a>
+                {% comment %} <a href="{% url 'bracket_create' tournament.id %}" class="btn btn-info">Edit Bracket</a> {% endcomment %}
                 <a href="{% url 'game_mode_edit' tournament.id %}" class="btn btn-warning">Edit Game Mode</a>
-                <form action="{% url 'tournament_delete' tournament.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete Tournament</button>
-                </form>
+                <a href="{% url 'tournament_delete' tournament.id %}" class="btn btn-danger">Delete Tournament</a>  <!-- Add delete button -->
             {% endif %}
         </div>
     </div>

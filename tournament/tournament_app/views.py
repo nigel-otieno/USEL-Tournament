@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import *
 from .forms import *
-from .bracket import Bracket
+# from .bracket import Bracket
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 
@@ -24,33 +24,27 @@ def tournament_delete(request, tournament_id):
 @login_required
 def game_mode_edit(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
-    game_mode_instance = tournament.game_mode
+    game_mode = tournament.game_mode
 
-    if game_mode_instance is None:
-        return redirect('tournament_detail', tournament_id=tournament.id)
-
-    if isinstance(game_mode_instance, TimeBasedGameMode):
-        GameModeForm = TimeBasedGameModeForm
-    elif isinstance(game_mode_instance, ScoreBasedGameMode):
-        GameModeForm = ScoreBasedGameModeForm
-    elif isinstance(game_mode_instance, HybridGameMode):
-        GameModeForm = HybridGameModeForm
+    if isinstance(game_mode, TimeBasedGameMode):
+        form_class = TimeBasedGameModeForm
+    elif isinstance(game_mode, ScoreBasedGameMode):
+        form_class = ScoreBasedGameModeForm
+    elif isinstance(game_mode, HybridGameMode):
+        form_class = HybridGameModeForm
     else:
-        raise ValueError("Invalid game mode")
+        raise ValueError("Unknown game mode")
 
     if request.method == 'POST':
-        game_mode_form = GameModeForm(request.POST, instance=game_mode_instance)
-        if game_mode_form.is_valid():
-            game_mode_form.save()
-            return redirect('tournament_detail', tournament.id)
+        form = form_class(request.POST, instance=game_mode)
+        if form.is_valid():
+            form.save()
+            return redirect('tournament_detail', pk=tournament.pk)  # Use pk here
     else:
-        game_mode_form = GameModeForm(instance=game_mode_instance)
+        form = form_class(instance=game_mode)
 
-    return render(request, 'game_mode_edit.html', {
-        'game_mode_form': game_mode_form,
-        'tournament': tournament,
-        'game_mode': game_mode_instance
-    })
+    return render(request, 'game_mode_edit.html', {'form': form, 'tournament': tournament})
+
 
 @login_required
 def game_mode_selection(request):
@@ -99,62 +93,26 @@ def tournament_create(request, game_mode):
     })
 
 
-@login_required
-def bracket_create(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
-    teams = [team.name for team in tournament.teams.all()]
-    
-    try:
-        bracket_instance = tournament.bracket
-        bracket_data = bracket_instance.state
-    except Bracket.DoesNotExist:
-        bracket_instance = None
-        bracket_data = None
-    
-    if bracket_data:
-        bracket = Bracket(teams, rounds=bracket_data['rounds'], lineup=bracket_data['lineup'])
-    else:
-        bracket = Bracket(teams)
-    
-    if request.method == 'POST':
-        if 'shuffle' in request.POST:
-            bracket.shuffle()
-        elif 'update' in request.POST:
-            round_number = int(request.POST['round'])
-            team_names = request.POST['teams'].split(',')
-            bracket.update(round_number, team_names)
-        
-        bracket_state = {
-            'rounds': bracket.rounds,
-            'lineup': bracket.lineup
-        }
-        if bracket_instance:
-            bracket_instance.state = bracket_state
-            bracket_instance.save()
-        else:
-            Bracket.objects.create(tournament=tournament, state=bracket_state)
-    
-    return render(request, 'bracket_create.html', {'bracket': bracket, 'tournament': tournament})
+# def bracket_create(request, tournament_id):
+#     tournament = get_object_or_404(Tournament, id=tournament_id)
+#     if request.method == 'POST':
+#         form = BracketForm(request.POST)
+#         if form.is_valid():
+#             bracket = form.save(commit=False)
+#             bracket.tournament = tournament
+#             bracket.save()
+#             form.save_m2m()
+#             return redirect('tournament_detail', tournament.id)
+#     else:
+#         form = BracketForm()
+#     return render(request, 'bracket_create.html', {'form': form, 'tournament': tournament})
 
 
-@login_required
-def bracket_display(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
-    teams = [team.name for team in tournament.teams.all()]
-    
-    try:
-        bracket_instance = tournament.bracket
-        bracket_data = bracket_instance.state
-    except Bracket.DoesNotExist:
-        bracket_instance = None
-        bracket_data = None
-    
-    if bracket_data:
-        bracket = Bracket(teams, rounds=bracket_data['rounds'], lineup=bracket_data['lineup'])
-    else:
-        bracket = Bracket(teams)
-    
-    return render(request, 'bracket_display.html', {'bracket': bracket, 'tournament': tournament})
+# # views.py
+# def bracket_display(request, tournament_id):
+#     tournament = get_object_or_404(Tournament, id=tournament_id)
+#     bracket = get_object_or_404(Bracket, tournament=tournament)
+#     return render(request, 'bracket_display.html', {'bracket': bracket, 'tournament': tournament})
 
 @login_required
 def tournament_edit(request, id):

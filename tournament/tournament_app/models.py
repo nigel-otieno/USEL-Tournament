@@ -97,3 +97,13 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Bracket(models.Model):
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='brackets')
+    team = models.ManyToManyField(Team, related_name='brackets')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    state = models.JSONField(default=dict)
+    def __str__(self):
+        return f"Bracket for {self.tournament.name}"
