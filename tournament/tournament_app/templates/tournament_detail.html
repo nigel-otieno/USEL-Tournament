@@ -36,8 +36,8 @@
             <p><strong>Description: </strong> {{ tournament.game_mode.description }}</p>
             <p><strong>Event Date: </strong> {{ tournament.game_mode.event_date }}</p>
             <p><strong>Rounds: </strong> {{ tournament.game_mode.rounds }}</p>
-            {% if tournament.game_mode.time_score %}
-            <p><strong>Time Score: </strong> {{ tournament.game_mode.time_score }}</p>
+            {% if game_mode_details.time_score %}
+            <p><strong>Time Score: </strong> {{ game_mode_details.time_score }}</p>
             {% endif %}
             {% endif %}
 
@@ -47,7 +47,7 @@
             <h3>Teams</h3>
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead>
+                    <thead id="team-table-header">
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
@@ -55,10 +55,13 @@
                             <th>Score Two</th>
                             <th>Score Three</th>
                             <th>Total Score</th>
+                            {% if game_mode_details.time_score %}
+                            <th>Time Score</th>
+                            {% endif %}
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="team-table-body">
                         {% for team in tournament.teams.all %}
                         <tr>
                             <td>{{ team.id }}</td>
@@ -67,6 +70,9 @@
                             <td>{{ team.score_two }}</td>
                             <td>{{ team.score_three }}</td>
                             <td>{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}</td>
+                            {% if game_mode_details.time_score %}
+                            <td>{{ team.time_score }}</td>
+                            {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
                                 <a href="{% url 'player_create' team.id %}" class="btn btn-primary btn-sm mr-2">Add Player</a>

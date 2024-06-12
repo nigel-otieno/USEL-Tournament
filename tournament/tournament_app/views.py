@@ -240,11 +240,31 @@ class TournamentDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         tournament = self.get_object()
         game_mode = None
+        #use to pass through details and render table client side in TournamentDetails
+        game_mode_details = {}                              #use to pass through details and render table client side in TournamentDetails
 
         if tournament.game_mode_type and tournament.game_mode_id:
             game_mode = tournament.game_mode_type.get_object_for_this_type(id=tournament.game_mode_id)
+        if isinstance(game_mode, TimeBasedGameMode):
+            game_mode_details = {
+                'type': 'TimeBased',
+                'rounds': game_mode.rounds,
+                'time_score': game_mode.time_score
+            }
+        elif isinstance(game_mode, ScoreBasedGameMode):
+            game_mode_details = {
+                'type': 'ScoreBased',
+                'rounds': game_mode.rounds
+            }
+        elif isinstance(game_mode, HybridGameMode):
+            game_mode_details = {
+                'type': 'Hybrid',
+                'rounds': game_mode.rounds,
+                'time_score': game_mode.time_score
+            }
 
         context['game_mode'] = game_mode
+        context['game_mode_details'] = game_mode_details
         return context
 
 class TeamDetailView(DetailView):
