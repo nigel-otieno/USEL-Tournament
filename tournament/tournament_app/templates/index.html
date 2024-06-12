@@ -4,18 +4,15 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="collage-background">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 1">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 2">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 3">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 4">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 5">
-    <img src="{% static 'tournament_app/images/robot.png' %}" alt="Collage Image 6">
-</div>
-
-<div class="jumbotron text-center">
-    <h1 class="display-4">Welcome to the Tournaments App</h1>
-    <p class="lead">This is the home page of the Tournaments App.</p>
+<div class="jumbotron text-center mb-2">
+    <h1 class="display-4">USEL Tournaments App</h1>
+    <p class="lead">
+        The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
+        Users can create tournaments with different game modes, manage teams, and track scores seamlessly.</p>
     <p class="lead">{{ user.username }}</p>
 </div>
+<div class="d-flex justify-content-center mb-2">
+    <img src="{% static 'tournament_app/images/usel.png' %}" alt="Collage Image 1" class="img-fluid">
+</div>
+
 {% endblock %}
