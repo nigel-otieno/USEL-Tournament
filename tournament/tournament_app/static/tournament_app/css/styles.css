@@ -3,3 +3,34 @@
     height: 200px; /* Adjust the height as needed */
     object-fit: cover;
 }
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.collage-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.collage-background img {
+    width: 25%;
+    height: 25%;
+    object-fit: cover;
+    opacity: 0.5;
+}

@@ -3,6 +3,30 @@
 {% block title %}Tournaments{% endblock %}
 
 {% block content %}
+<style>
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 200px; /* Set the height for the image */
+        object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+    }
+
+    .card-body {
+        flex: 1; /* This makes the card body expand to fill the remaining space */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body > .btn-primary {
+        margin-top: auto; /* Pushes the button to the bottom */
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="mt-4 mb-3">Tournaments</h1>
     {% if user.is_authenticated %}
@@ -38,6 +62,7 @@
                 {% if tournament.game_mode %}
                 <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode }}</p> <!-- Added game mode display -->
                 {% endif %}
+                <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode.name }}</p>
                 <a href="{% url 'tournament_detail' tournament.id %}" class="btn btn-primary">View Details</a>
             </div>
         </div>
