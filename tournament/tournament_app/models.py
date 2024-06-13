@@ -65,6 +65,21 @@ class Tournament(models.Model):
     game_mode_id = models.PositiveIntegerField(null=True, blank=True)
     game_mode = GenericForeignKey('game_mode_type', 'game_mode_id')
 
+    #implement headers
+
+    def get_headers(self):
+        headers = ['ID', 'Name']
+        if self.game_mode_type:
+            rounds = self.game_mode.rounds if self.game_mode else 0
+            if self.game_mode_type.model == 'timebasedgamemode':
+                headers.append('Time Score')
+            if self.game_mode_type.model in ['scorebasedgamemode', 'hybridgamemode']:
+                for i in range(1, rounds + 1):
+                    headers.append(f'Score {i}')
+                headers.append('Total Score')
+        headers.append('Actions')
+        return headers
+        
     def __str__(self):
         return self.name
 

@@ -227,6 +227,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['tournaments'] = Tournament.objects.all()
         return context
+    
 class TournamentsView(ListView):
     model = Tournament
     template_name = 'tournaments.html'
@@ -265,6 +266,7 @@ class TournamentDetailView(DetailView):
 
         context['game_mode'] = game_mode
         context['game_mode_details'] = game_mode_details
+        context['headers'] = tournament.get_headers() 
         return context
 
 class TeamDetailView(DetailView):

@@ -10,9 +10,8 @@
         </div>
         <div class="col-md-6 text-right">
             {% if user.is_authenticated and user == tournament.created_by %}
-                {% comment %} <a href="{% url 'bracket_create' tournament.id %}" class="btn btn-info">Edit Bracket</a> {% endcomment %}
                 <a href="{% url 'game_mode_edit' tournament.id %}" class="btn btn-warning">Edit Game Mode</a>
-                <a href="{% url 'tournament_delete' tournament.id %}" class="btn btn-danger">Delete Tournament</a>  <!-- Add delete button -->
+                <a href="{% url 'tournament_delete' tournament.id %}" class="btn btn-danger">Delete Tournament</a>
             {% endif %}
         </div>
     </div>
@@ -49,16 +48,9 @@
                 <table class="table table-striped">
                     <thead id="team-table-header">
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Score One</th>
-                            <th>Score Two</th>
-                            <th>Score Three</th>
-                            <th>Total Score</th>
-                            {% if game_mode_details.time_score %}
-                            <th>Time Score</th>
-                            {% endif %}
-                            <th class="text-right">Actions</th>
+                            {% for header in headers %}
+                                <th>{{ header }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody id="team-table-body">
@@ -66,13 +58,21 @@
                         <tr>
                             <td>{{ team.id }}</td>
                             <td>{{ team.name }}</td>
-                            <td>{{ team.score_one }}</td>
-                            <td>{{ team.score_two }}</td>
-                            <td>{{ team.score_three }}</td>
-                            <td>{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}</td>
-                            {% if game_mode_details.time_score %}
-                            <td>{{ team.time_score }}</td>
-                            {% endif %}
+                            {% for header in headers %}
+                                {% if header == 'Round' %}
+                                    <td>{{ team.rounds }}</td>
+                                {% elif header == 'Time Score' %}
+                                    <td>{{ team.time_score }}</td>
+                                {% elif header == 'Score 1' %}
+                                    <td>{{ team.score_one }}</td>
+                                {% elif header == 'Score 2' %}
+                                    <td>{{ team.score_two }}</td>
+                                {% elif header == 'Score 3' %}
+                                    <td>{{ team.score_three }}</td>
+                                {% elif header == 'Total Score' %}
+                                    <td>{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}</td>
+                                {% endif %}
+                            {% endfor %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
                                 <a href="{% url 'player_create' team.id %}" class="btn btn-primary btn-sm mr-2">Add Player</a>
