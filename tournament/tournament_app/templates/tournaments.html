@@ -4,26 +4,150 @@
 
 {% block content %}
 <style>
+    :root {
+        --surface-color: #fff;
+        --curve: 40;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background-color: #fef8f8;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 8rem;
+        margin: 4rem 5vw;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    @media (min-width: 768px) {
+        .cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
     .card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+        position: relative;
+        display: block;
+        height: 130%;
+        width: 150%;
+        border-radius: calc(var(--curve) * 1px);
+        overflow: hidden;
+        text-decoration: none;
+        background-color: var(--surface-color);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
-    .card-img-top {
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card__image {
         width: 100%;
-        height: 200px; /* Set the height for the image */
-        object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+        height: 200px;
+        object-fit: cover;
     }
 
-    .card-body {
-        flex: 1; /* This makes the card body expand to fill the remaining space */
+    .card__overlay {
+        position: absolute;
+        text-align: center;
+        bottom: -10px;
+        left: -40px;
+        right: -40px    ;
+        z-index: 1;
+        border-radius: calc(var(--curve) * 1px);
+        background-color: var(--surface-color);
+        transform: translateY(100%);
+        transition: 0.2s ease-in-out;
+        padding: 20px;
+    }
+
+    .card:hover .card__overlay {
+        transform: translateY(0);
+    }
+
+    .card__header {
+        position: relative;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 2em;
+        padding: 2em;
+        border-radius: calc(var(--curve) * 1px) 0 0 0;
+        background-color: var(--surface-color);
+        transform: translateY(-100%);
+        transition: 0.2s ease-in-out;
     }
 
-    .card-body > .btn-primary {
-        margin-top: auto; /* Pushes the button to the bottom */
+    .card__arc {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        z-index: 1;
+    }
+
+    .card__arc path {
+        fill: var(--surface-color);
+    }
+
+    .card:hover .card__header {
+        transform: translateY(0);
+    }
+
+    .card__thumb {
+        flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .card__title {
+        font-size: 1.5em;
+        margin: 0;
+        color: #6A515E;
+    }
+
+    .card__description {
+        color: #D7BDCA;
+        font-size: 0.9em;
+    }
+
+    .card__description strong {
+        display: block;
+        color: #6A515E;
+    }
+
+    .card__description .btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .sort-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .sort-container label {
+        margin-right: 10px;
+    }
+
+    .form-inline {
+        display: flex;
+        align-items: center;
     }
 </style>
 
@@ -35,46 +159,59 @@
     </div>
     {% endif %}
 </div>
-<div class="form-inline mb-3">
-    <label for="sort" class="mr-2">Sort by:</label>
-    <select id="sort" class="form-control mr-2" onchange="sortTournaments()">
-        <option value="name">Tournament Name</option>
-        <option value="date">Date</option>
-        <option value="host">HostName</option>
-        <option value="gamemode">Game Mode</option>
-    </select>
+
+<div class="sort-container mb-3">
+    <div class="form-inline">
+        <label for="sort" class="mr-2">Sort by:</label>
+        <select id="sort" class="form-control" onchange="sortTournaments()">
+            <option value="name">Tournament Name</option>
+            <option value="date">Date</option>
+            <option value="host">Host Name</option>
+            <option value="gamemode">Game Mode</option>
+        </select>
+    </div>
+    <div class="form-inline ml-3">
+        <input type="text" id="search" class="form-control" placeholder="Search Tournaments..." onkeyup="searchTournaments()">
+    </div>
 </div>
 
-<div class="row" id="tournament-container">
+<ul class="cards" id="tournament-container">
     {% for tournament in tournaments %}
-    <div class="col-md-4 mb-4 tournament-card" data-name="{{ tournament.name }}" data-date="{{ tournament.date }}" data-host="{{ tournament.created_by }}">
-        <div class="card">
-            {% if tournament.image %}
-                <img src="{{ tournament.image.url }}" class="card-img-top" alt="{{ tournament.name }}">
-            {% else %}
-                <img src="{% static 'tournament_app/images/robot.png' %}" class="card-img-top" alt="No Image Available">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ tournament.name }}</h5>
-                <p class="card-text"><strong>Tournament Host: </strong> {{ tournament.created_by }}</p>
-                <p class="card-text"><strong>Date:</strong> {{ tournament.date }}</p>
-                <p class="card-text"><strong>Location:</strong> {{ tournament.location }}</p>
-                {% if tournament.game_mode %}
-                <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode }}</p> <!-- Added game mode display -->
-                {% endif %}
-                <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode.name }}</p>
+    <li class="card tournament-card" data-name="{{ tournament.name }}" data-date="{{ tournament.date }}" data-host="{{ tournament.created_by.username }}">
+        {% if tournament.image %}
+            <img src="{{ tournament.image.url }}" class="card__image" alt="{{ tournament.name }}">
+        {% else %}
+            <img src="{% static 'tournament_app/images/robot.png' %}" class="card__image" alt="No Image Available">
+        {% endif %}
+        <div class="card__overlay">
+            <div class="card__header">
+                <svg class="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
+                <div class="card__title">{{ tournament.name }}</div>
+            </div>
+            <div class="card__description">
+                <strong>Host:</strong> {{ tournament.created_by }}
+                <strong>Date:</strong> {{ tournament.date }}
+                <strong>Location:</strong> {{ tournament.location }}
                 <a href="{% url 'tournament_detail' tournament.id %}" class="btn btn-primary">View Details</a>
             </div>
         </div>
-    </div>
+    </li>
     {% endfor %}
-</div>
+</ul>
+
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.tournament-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+
     function sortTournaments() {
         const container = document.getElementById('tournament-container');
         const cards = Array.from(container.getElementsByClassName('tournament-card'));
         const sortBy = document.getElementById('sort').value;
-    
+
         cards.sort((a, b) => {
             let aValue, bValue;
             if (sortBy === 'date') {
@@ -90,13 +227,27 @@
                 aValue = a.getAttribute('data-gamemode').toLowerCase();
                 bValue = b.getAttribute('data-gamemode').toLowerCase();
             }
-            
+
             if (aValue < bValue) return -1;
             if (aValue > bValue) return 1;
             return 0;
         });
-    
+
         cards.forEach(card => container.appendChild(card));
     }
-    </script>
+
+    function searchTournaments() {
+        const searchInput = document.getElementById('search').value.toLowerCase();
+        const cards = document.querySelectorAll('.tournament-card');
+
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            if (name.includes(searchInput)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
 {% endblock %}
