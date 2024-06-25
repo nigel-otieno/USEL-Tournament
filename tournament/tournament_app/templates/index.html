@@ -4,14 +4,17 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="jumbotron shiny-card">
-    <h1 class="display-4">USEL Tournaments App</h1>
-    <p class="lead">
-        The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
-        Users can create tournaments with different game modes, manage teams, and track scores seamlessly.
-    </p>
-    <p class="lead">{{ user.username }}</p>
-</div>
+<a href="{% url 'tournaments' %}" style="text-decoration: none; color: black">
+    <div class="jumbotron shiny-card" >
+        <h1 class="display-4">USEL Tournaments App</h1>
+        <p class="lead">
+            The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
+            Users can create tournaments with different game modes, manage teams, and track scores seamlessly.
+        </p>
+        <p class="lead">Welcome, {{ user.username }}</p>
+    </div>    
+</a>
+
 <div class="d-flex justify-content-center mb-2">
     <img src="{% static 'tournament_app/images/usel.png' %}" alt="Collage Image 1" class="img-fluid">
 </div>
