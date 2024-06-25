@@ -165,6 +165,7 @@ class PlayerDetailView(DetailView):
     context_object_name = 'player'
 
 @csrf_exempt
+@login_required
 def update_team_score(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -174,9 +175,13 @@ def update_team_score(request):
 
         try:
             team = Team.objects.get(id=team_id)
-            setattr(team, score_field, score_value)
-            team.save()
-            return JsonResponse({"success": True})
+            tournament = team.tournament.first()  # Assuming a team belongs to only one tournament
+            if request.user == tournament.created_by or request.user == team.created_by:
+                setattr(team, score_field, score_value)
+                team.save()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "error": "Permission denied"})
         except Team.DoesNotExist:
             return JsonResponse({"success": False, "error": "Team not found"})
         except Exception as e:
