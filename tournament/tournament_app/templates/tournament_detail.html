@@ -65,13 +65,13 @@
                                 {% endif %}
                             </td>
                             {% if tournament.rounds >= 1 %}
-                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">{{ team.score_one }}</td>
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)" onkeydown="handleEnter(event)">{{ team.score_one }}</td>
                             {% endif %}
                             {% if tournament.rounds >= 2 %}
-                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">{{ team.score_two }}</td>
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)" onkeydown="handleEnter(event)">{{ team.score_two }}</td>
                             {% endif %}
                             {% if tournament.rounds >= 3 %}
-                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">{{ team.score_three }}</td>
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)" onkeydown="handleEnter(event)">{{ team.score_three }}</td>
                             {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
@@ -119,6 +119,13 @@
         .catch(error => {
             console.error("Error:", error);
         });
+    }
+
+    function handleEnter(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            event.target.blur();
+        }
     }
 </script>
 {% endblock %}
