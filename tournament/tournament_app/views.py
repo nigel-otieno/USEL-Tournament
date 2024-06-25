@@ -5,7 +5,9 @@ from .models import *
 from .forms import *
 # from .bracket import Bracket
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json 
 
 @login_required
 def tournament_delete(request, tournament_id):
@@ -22,97 +24,17 @@ def tournament_delete(request, tournament_id):
     return render(request, 'tournament_confirm_delete.html', {'tournament': tournament})
 
 @login_required
-def game_mode_edit(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
-    game_mode = tournament.game_mode
-
-    if isinstance(game_mode, TimeBasedGameMode):
-        form_class = TimeBasedGameModeForm
-    elif isinstance(game_mode, ScoreBasedGameMode):
-        form_class = ScoreBasedGameModeForm
-    elif isinstance(game_mode, HybridGameMode):
-        form_class = HybridGameModeForm
-    else:
-        raise ValueError("Unknown game mode")
-
-    if request.method == 'POST':
-        form = form_class(request.POST, instance=game_mode)
-        if form.is_valid():
-            form.save()
-            return redirect('tournament_detail', pk=tournament.pk)  # Use pk here
-    else:
-        form = form_class(instance=game_mode)
-
-    return render(request, 'game_mode_edit.html', {'form': form, 'tournament': tournament})
-
-
-@login_required
-def game_mode_selection(request):
-    if request.method == 'POST':
-        form = GameModeSelectionForm(request.POST)
-        if form.is_valid():
-            game_mode = form.cleaned_data['game_mode']
-            return redirect('tournament_create', game_mode=game_mode)
-    else:
-        form = GameModeSelectionForm()
-    return render(request, 'game_mode_selection.html', {'form': form})
-
-@login_required
-def tournament_create(request, game_mode):
-    game_mode_instance = None
-    if game_mode == 'TimeBasedGameMode':
-        GameModeForm = TimeBasedGameModeForm
-    elif game_mode == 'ScoreBasedGameMode':
-        GameModeForm = ScoreBasedGameModeForm
-    elif game_mode == 'HybridGameMode':
-        GameModeForm = HybridGameModeForm
-    else:
-        raise ValueError("Invalid game mode")
-
+def tournament_create(request):
     if request.method == 'POST':
         form = TournamentForm(request.POST, request.FILES)
-        game_mode_form = GameModeForm(request.POST)
-        if form.is_valid() and game_mode_form.is_valid():
+        if form.is_valid():
             tournament = form.save(commit=False)
             tournament.created_by = request.user
-            game_mode_instance = game_mode_form.save(commit=False)
-            game_mode_instance.created_by = request.user
-            game_mode_instance.save()
-            tournament.game_mode_type = ContentType.objects.get_for_model(game_mode_instance)
-            tournament.game_mode_id = game_mode_instance.id
             tournament.save()
             return redirect('tournament_detail', pk=tournament.pk)
     else:
         form = TournamentForm()
-        game_mode_form = GameModeForm()
-
-    return render(request, 'tournament_create.html', {
-        'form': form,
-        'game_mode_form': game_mode_form,
-        'game_mode': game_mode
-    })
-
-
-# def bracket_create(request, tournament_id):
-#     tournament = get_object_or_404(Tournament, id=tournament_id)
-#     if request.method == 'POST':
-#         form = BracketForm(request.POST)
-#         if form.is_valid():
-#             bracket = form.save(commit=False)
-#             bracket.tournament = tournament
-#             bracket.save()
-#             form.save_m2m()
-#             return redirect('tournament_detail', tournament.id)
-#     else:
-#         form = BracketForm()
-#     return render(request, 'bracket_create.html', {'form': form, 'tournament': tournament})
-
-
-# # views.py
-# def bracket_display(request, tournament_id):
-#     tournament = get_object_or_404(Tournament, id=tournament_id)
-#     bracket = get_object_or_404(Bracket, tournament=tournament)
-#     return render(request, 'bracket_display.html', {'bracket': bracket, 'tournament': tournament})
+    return render(request, 'tournament_create.html', {'form': form})
 
 @login_required
 def tournament_edit(request, id):
@@ -121,42 +43,17 @@ def tournament_edit(request, id):
     if request.user != tournament.created_by:
         return redirect('tournament_detail', pk=tournament.id)
 
-    game_mode_instance = None
-    GameModeForm = None
-
-    if hasattr(tournament, 'timebasedgamemode'):
-        game_mode_instance = tournament.timebasedgamemode
-        GameModeForm = TimeBasedGameModeForm
-    elif hasattr(tournament, 'scorebasedgamemode'):
-        game_mode_instance = tournament.scorebasedgamemode
-        GameModeForm = ScoreBasedGameModeForm
-    elif hasattr(tournament, 'hybridgamemode'):
-        game_mode_instance = tournament.hybridgamemode
-        GameModeForm = HybridGameModeForm
-
     if request.method == 'POST':
         form = TournamentForm(request.POST, request.FILES, instance=tournament)
-        if game_mode_instance:
-            game_mode_form = GameModeForm(request.POST, instance=game_mode_instance)
-        else:
-            game_mode_form = None
-
-        if form.is_valid() and (game_mode_form is None or game_mode_form.is_valid()):
+        if form.is_valid():
             form.save()
-            if game_mode_form:
-                game_mode_form.save()
             return redirect('tournament_detail', pk=tournament.id)
     else:
         form = TournamentForm(instance=tournament)
-        if game_mode_instance:
-            game_mode_form = GameModeForm(instance=game_mode_instance)
-        else:
-            game_mode_form = None
 
     return render(request, 'tournament_edit.html', {
         'form': form,
-        'tournament': tournament,
-        'game_mode_form': game_mode_form
+        'tournament': tournament
     })
 
 @login_required
@@ -188,7 +85,6 @@ def upload_video(request, team_id):
         team.save()
         return redirect('team_detail', pk=team.id)
     return redirect('team_detail', pk=team.id)
-
 
 @login_required
 def player_create(request, team_id):
@@ -227,6 +123,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['tournaments'] = Tournament.objects.all()
         return context
+
 class TournamentsView(ListView):
     model = Tournament
     template_name = 'tournaments.html'
@@ -239,34 +136,24 @@ class TournamentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tournament = self.get_object()
-        game_mode = None
-        #use to pass through details and render table client side in TournamentDetails
-        game_mode_details = {}                              #use to pass through details and render table client side in TournamentDetails
+        teams = list(tournament.teams.all())
 
-        if tournament.game_mode_type and tournament.game_mode_id:
-            game_mode = tournament.game_mode_type.get_object_for_this_type(id=tournament.game_mode_id)
-        if isinstance(game_mode, TimeBasedGameMode):
-            game_mode_details = {
-                'type': 'TimeBased',
-                'rounds': game_mode.rounds,
-                'time_score': game_mode.time_score
-            }
-        elif isinstance(game_mode, ScoreBasedGameMode):
-            game_mode_details = {
-                'type': 'ScoreBased',
-                'rounds': game_mode.rounds
-            }
-        elif isinstance(game_mode, HybridGameMode):
-            game_mode_details = {
-                'type': 'Hybrid',
-                'rounds': game_mode.rounds,
-                'time_score': game_mode.time_score
-            }
-
-        context['game_mode'] = game_mode
-        context['game_mode_details'] = game_mode_details
+        sort_by = self.request.GET.get('sort', 'name-asc')
+        
+        if sort_by == 'name-asc':
+            teams = sorted(teams, key=lambda t: t.name.lower())
+        elif sort_by == 'name-desc':
+            teams = sorted(teams, key=lambda t: t.name.lower(), reverse=True)
+        elif sort_by == 'score-asc':
+            teams = sorted(teams, key=lambda t: (t.score_one or 0) + (t.score_two or 0) + (t.score_three or 0))
+        elif sort_by == 'score-desc':
+            teams = sorted(teams, key=lambda t: (t.score_one or 0) + (t.score_two or 0) + (t.score_three or 0), reverse=True)
+        
+        context['tournament'] = tournament
+        context['teams'] = teams
+        context['sort_by'] = sort_by
+        context['round_headers'] = range(1, tournament.rounds + 1)
         return context
-
 class TeamDetailView(DetailView):
     model = Team
     template_name = 'team_detail.html'
@@ -276,3 +163,23 @@ class PlayerDetailView(DetailView):
     model = Players
     template_name = 'player_detail.html'
     context_object_name = 'player'
+
+@csrf_exempt
+def update_team_score(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        team_id = data.get("team_id")
+        score_field = data.get("score_field")
+        score_value = data.get("score_value")
+
+        try:
+            team = Team.objects.get(id=team_id)
+            setattr(team, score_field, score_value)
+            team.save()
+            return JsonResponse({"success": True})
+        except Team.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Team not found"})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})

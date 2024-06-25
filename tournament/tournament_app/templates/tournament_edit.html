@@ -1,10 +1,8 @@
-{% extends "base_generic.html" %}
+{% extends 'base_generic.html' %}
 
 {% block title %}Edit Tournament{% endblock %}
 
 {% block content %}
-<button onclick="history.back()" class="btn btn-secondary ">Back</button>
-
 <div class="container mt-5">
     <h2>Edit Tournament: {{ tournament.name }}</h2>
     <form method="post" enctype="multipart/form-data">

@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends 'base_generic.html' %}
 
 {% block title %}Tournament Details{% endblock %}
 
@@ -10,11 +10,19 @@
         </div>
         <div class="col-md-6 text-right">
             {% if user.is_authenticated and user == tournament.created_by %}
-                {% comment %} <a href="{% url 'bracket_create' tournament.id %}" class="btn btn-info">Edit Bracket</a> {% endcomment %}
-                <a href="{% url 'game_mode_edit' tournament.id %}" class="btn btn-warning">Edit Game Mode</a>
-                <a href="{% url 'tournament_delete' tournament.id %}" class="btn btn-danger">Delete Tournament</a>  <!-- Add delete button -->
+                <a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-warning">Edit Tournament</a>
+                <a href="{% url 'tournament_delete' tournament.id %}" class="btn btn-danger">Delete Tournament</a>
             {% endif %}
         </div>
+    </div>
+    <div class="form-inline mb-3">
+        <label for="sort" class="mr-2">Sort by:</label>
+        <select id="sort" class="form-control mr-2" onchange="sortTeams()">
+            <option value="name-asc" {% if sort_by == 'name-asc' %}selected{% endif %}>Team Name A-Z</option>
+            <option value="name-desc" {% if sort_by == 'name-desc' %}selected{% endif %}>Team Name Z-A</option>
+            <option value="score-asc" {% if sort_by == 'score-asc' %}selected{% endif %}>Lowest Score</option>
+            <option value="score-desc" {% if sort_by == 'score-desc' %}selected{% endif %}>Highest Score</option>
+        </select>
     </div>
 
     <div class="card">
@@ -25,53 +33,45 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <p><strong>Tournament Host: </strong> {{ tournament.created_by }}</p>
             <p><strong>Date:</strong> {{ tournament.date }}</p>
             <p><strong>Time:</strong> {{ tournament.time }}</p>
             <p><strong>Location:</strong> {{ tournament.location }}</p>
+            <p><strong>Rules:</strong> {{ tournament.rules }}</p>
+            <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
+            <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
 
-            {% if tournament.game_mode %}
-            <h3>Game Mode Details</h3>
-            <p><strong>Game Mode: </strong> {{ tournament.game_mode.name }}</p>
-            <p><strong>Description: </strong> {{ tournament.game_mode.description }}</p>
-            <p><strong>Event Date: </strong> {{ tournament.game_mode.event_date }}</p>
-            <p><strong>Rounds: </strong> {{ tournament.game_mode.rounds }}</p>
-            {% if game_mode_details.time_score %}
-            <p><strong>Time Score: </strong> {{ game_mode_details.time_score }}</p>
-            {% endif %}
-            {% endif %}
-
-            {% if user == tournament.created_by %}
-            <a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">Edit Tournament</a>
-            {% endif %}
             <h3>Teams</h3>
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead id="team-table-header">
+                    <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Score One</th>
-                            <th>Score Two</th>
-                            <th>Score Three</th>
-                            <th>Total Score</th>
-                            {% if game_mode_details.time_score %}
-                            <th>Time Score</th>
-                            {% endif %}
+                            <th>Team Name</th>
+                            <th>Video URL</th>
+                            {% for round in round_headers %}
+                                <th>Score {{ round }}</th>
+                            {% endfor %}
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="team-table-body">
-                        {% for team in tournament.teams.all %}
-                        <tr>
-                            <td>{{ team.id }}</td>
+                        {% for team in teams %}
+                        <tr class="team-row" data-name="{{ team.name }}" data-score="{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}">
                             <td>{{ team.name }}</td>
-                            <td>{{ team.score_one }}</td>
-                            <td>{{ team.score_two }}</td>
-                            <td>{{ team.score_three }}</td>
-                            <td>{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}</td>
-                            {% if game_mode_details.time_score %}
-                            <td>{{ team.time_score }}</td>
+                            <td>
+                                {% if team.video_url %}
+                                    <a href="{{ team.video_url }}" target="_blank">View Video</a>
+                                {% else %}
+                                    No video available
+                                {% endif %}
+                            </td>
+                            {% if tournament.rounds >= 1 %}
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">{{ team.score_one }}</td>
+                            {% endif %}
+                            {% if tournament.rounds >= 2 %}
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">{{ team.score_two }}</td>
+                            {% endif %}
+                            {% if tournament.rounds >= 3 %}
+                                <td contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">{{ team.score_three }}</td>
                             {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
@@ -87,4 +87,38 @@
         </div>
     </div>
 </div>
+<script>
+    function sortTeams() {
+        const sortValue = document.getElementById('sort').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', sortValue);
+        window.location.href = url.toString();
+    }
+
+    function updateScore(teamId, scoreField, scoreValue) {
+        fetch("{% url 'update_team_score' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                team_id: teamId,
+                score_field: scoreField,
+                score_value: scoreValue
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Score updated successfully");
+            } else {
+                console.error("Error updating score");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+</script>
 {% endblock %}

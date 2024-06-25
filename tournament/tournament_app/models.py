@@ -3,67 +3,78 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-class TimeBasedGameMode(models.Model):
-    ROUND_CHOICES = [
-        (1, '1 Round'),
-        (2, '2 Rounds'),
-        (3, '3 Rounds'),
-    ]
+# class TimeBasedGameMode(models.Model):
+#     ROUND_CHOICES = [
+#         (1, '1 Round'),
+#         (2, '2 Rounds'),
+#         (3, '3 Rounds'),
+#     ]
 
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_based_created')
-    created_at = models.DateTimeField(auto_now_add=True)
-    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
-    time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
+#     name = models.CharField(max_length=100)
+#     description = models.TextField(blank=True, null=True)
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_based_created')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+#     time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-class ScoreBasedGameMode(models.Model):
-    ROUND_CHOICES = [
-        (1, '1 Round'),
-        (2, '2 Rounds'),
-        (3, '3 Rounds'),
-    ]
+# class ScoreBasedGameMode(models.Model):
+#     ROUND_CHOICES = [
+#         (1, '1 Round'),
+#         (2, '2 Rounds'),
+#         (3, '3 Rounds'),
+#     ]
 
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='score_based_created')
-    created_at = models.DateTimeField(auto_now_add=True)
-    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+#     name = models.CharField(max_length=100)
+#     description = models.TextField(blank=True, null=True)
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='score_based_created')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-class HybridGameMode(models.Model):
-    ROUND_CHOICES = [
-        (1, '1 Round'),
-        (2, '2 Rounds'),
-        (3, '3 Rounds'),
-    ]
+# class HybridGameMode(models.Model):
+#     ROUND_CHOICES = [
+#         (1, '1 Round'),
+#         (2, '2 Rounds'),
+#         (3, '3 Rounds'),
+#     ]
 
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hybrid_created')
-    created_at = models.DateTimeField(auto_now_add=True)
-    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
-    time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
+#     name = models.CharField(max_length=100)
+#     description = models.TextField(blank=True, null=True)
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hybrid_created')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+#     time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class Tournament(models.Model):
+    ROUND_CHOICES = [
+        (1, '1 Round'),
+        (2, '2 Rounds'),
+        (3, '3 Rounds'),
+    ]
+
+    GAME_MODE_CHOICES = [
+        ('TimeAttack', 'Time Attack: Complete the objective in the shortest time possible.'),
+        ('HighestScore', 'Highest Score: Achieve the highest score to win.'),
+    ]
+
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True)
+    rules = models.CharField(max_length=100, null=True)
     date = models.DateField()
     time = models.TimeField()
     image = models.ImageField(upload_to='tournament_images/', null=True, blank=True)
     location = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tournaments')
-
-    game_mode_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    game_mode_id = models.PositiveIntegerField(null=True, blank=True)
-    game_mode = GenericForeignKey('game_mode_type', 'game_mode_id')
+    rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
+    game_mode = models.CharField(max_length=20, choices=GAME_MODE_CHOICES, default='TimeAttack')
 
     def __str__(self):
         return self.name
@@ -91,9 +102,9 @@ class Team(models.Model):
     score_one = models.IntegerField(null=True, blank=True)
     score_two = models.IntegerField(null=True, blank=True)
     score_three = models.IntegerField(null=True, blank=True)
+    total_score = models.IntegerField(null=True, blank=True)
     video_url = models.URLField(max_length=250, blank=True, null=True)
-    guardian_name = models.CharField(max_length=255, blank=True, null=True)
-    guardian_contact = models.CharField(max_length=15, blank=True, null=True)
+    coach = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name

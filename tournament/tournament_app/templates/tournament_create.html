@@ -1,4 +1,5 @@
 {% extends 'base_generic.html' %}
+
 {% block title %}Create Tournament{% endblock %}
 
 {% block content %}
@@ -7,8 +8,6 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <h3>Game Mode Details</h3>
-        {{ game_mode_form.as_p }}
         <button type="submit" class="btn btn-primary">Create Tournament</button>
     </form>
 </div>
