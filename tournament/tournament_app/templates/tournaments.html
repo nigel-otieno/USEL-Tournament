@@ -35,15 +35,27 @@
     </div>
     {% endif %}
 </div>
-<div class="form-inline mb-3">
-    <label for="sort" class="mr-2">Sort by:</label>
-    <select id="sort" class="form-control mr-2" onchange="sortTournaments()">
-        <option value="name">Tournament Name</option>
-        <option value="date">Date</option>
-        <option value="host">HostName</option>
-        <option value="gamemode">Game Mode</option>
-    </select>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="d-flex flex-column">
+                <div class="form-inline mb-3">
+                    <label for="sort" class="mr-2">Sort by:</label>
+                    <select id="sort" class="form-control" onchange="sortTournaments()">
+                        <option value="date">Tournament Date</option>
+                        <option value="name">Tournament Name (A-Z)</option>
+                        <option value="host">Host Name (A-Z)</option>
+                        <option value="gamemode">Game Mode Type</option>
+                    </select>
+                </div>
+                <div class="form-inline">
+                    <input type="text" id="search" class="form-control" placeholder="Search Tournaments..." onkeyup="searchTournaments()">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <div class="row" id="tournament-container">
     {% for tournament in tournaments %}
@@ -96,6 +108,20 @@
         });
     
         cards.forEach(card => container.appendChild(card));
+    }
+
+    function searchTournaments() {
+        const searchInput = document.getElementById('search').value.toLowerCase();
+        const cards = document.querySelectorAll('.tournament-card');
+
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            if (name.includes(searchInput)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
     }
     </script>
 {% endblock %}
