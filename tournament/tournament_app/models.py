@@ -75,6 +75,7 @@ class Tournament(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tournaments')
     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
     game_mode = models.CharField(max_length=20, choices=GAME_MODE_CHOICES, default='TimeAttack')
+    video_url = models.URLField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         return self.name
