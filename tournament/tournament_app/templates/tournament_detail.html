@@ -87,33 +87,33 @@
                             </td>
                             {% if tournament.game_mode == 'HighestScore' %}
                                 {% if tournament.rounds >= 1 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_one" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
                                         {{ team.score_one }}
                                     </td>
                                 {% endif %}
                                 {% if tournament.rounds >= 2 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_two" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
                                         {{ team.score_two }}
                                     </td>
                                 {% endif %}
                                 {% if tournament.rounds >= 3 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_three" onkeydown="handleEnter(event)"onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
                                         {{ team.score_three }}
                                     </td>
                                 {% endif %}
                             {% elif tournament.game_mode == 'TimeAttack' %}
                                 {% if tournament.rounds >= 1 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_one" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
                                         {{ team.time_score_one|default:"00:00" }}
                                     </td>
                                 {% endif %}
                                 {% if tournament.rounds >= 2 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_two', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_two" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_two', this.innerText)">
                                         {{ team.time_score_two|default:"00:00" }}
                                     </td>
                                 {% endif %}
                                 {% if tournament.rounds >= 3 %}
-                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_three', this.innerText)">
+                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_three" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_three', this.innerText)">
                                         {{ team.time_score_three|default:"00:00" }}
                                     </td>
                                 {% endif %}
@@ -133,6 +133,13 @@
     </div>
 </div>
 <script>
+   function handleEnter(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            event.target.blur();
+        }
+    }
+
     function updateScore(teamId, scoreField, scoreValue) {
         fetch("{% url 'update_team_score' %}", {
             method: "POST",
