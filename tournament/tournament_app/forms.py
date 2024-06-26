@@ -9,35 +9,10 @@ class TournamentForm(forms.ModelForm):
             'rounds': forms.RadioSelect,
             'game_mode': forms.RadioSelect,
         }
-
-# class GameModeSelectionForm(forms.Form):
-#     GAME_MODE_CHOICES = [
-#         ('TimeBasedGameMode', 'Time Based Game Mode'),
-#         ('ScoreBasedGameMode', 'Score Based Game Mode'),
-#         ('HybridGameMode', 'Hybrid Game Mode'),
-#     ]
-#     game_mode = forms.ChoiceField(choices=GAME_MODE_CHOICES, widget=forms.RadioSelect)
-
-# class TimeBasedGameModeForm(forms.ModelForm):
-#     class Meta:
-#         model = TimeBasedGameMode
-#         fields = ['name', 'description',  'rounds', 'time_score']
-
-# class ScoreBasedGameModeForm(forms.ModelForm):
-#     class Meta:
-#         model = ScoreBasedGameMode
-#         fields = ['name', 'description',  'rounds']
-
-# class HybridGameModeForm(forms.ModelForm):
-#     class Meta:
-#         model = HybridGameMode
-#         fields = ['name', 'description',  'rounds', 'time_score']
-
-
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'video_url', 'coach', 'score_one', 'score_two', 'score_three']
+        fields = ['name', 'video_url', 'coach']
 
 class PlayerForm(forms.ModelForm):
     class Meta:

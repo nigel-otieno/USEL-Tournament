@@ -3,56 +3,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-# class TimeBasedGameMode(models.Model):
-#     ROUND_CHOICES = [
-#         (1, '1 Round'),
-#         (2, '2 Rounds'),
-#         (3, '3 Rounds'),
-#     ]
-
-#     name = models.CharField(max_length=100)
-#     description = models.TextField(blank=True, null=True)
-#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_based_created')
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
-#     time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
-
-#     def __str__(self):
-#         return self.name
-
-# class ScoreBasedGameMode(models.Model):
-#     ROUND_CHOICES = [
-#         (1, '1 Round'),
-#         (2, '2 Rounds'),
-#         (3, '3 Rounds'),
-#     ]
-
-#     name = models.CharField(max_length=100)
-#     description = models.TextField(blank=True, null=True)
-#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='score_based_created')
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
-
-#     def __str__(self):
-#         return self.name
-
-# class HybridGameMode(models.Model):
-#     ROUND_CHOICES = [
-#         (1, '1 Round'),
-#         (2, '2 Rounds'),
-#         (3, '3 Rounds'),
-#     ]
-
-#     name = models.CharField(max_length=100)
-#     description = models.TextField(blank=True, null=True)
-#     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hybrid_created')
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
-#     time_score = models.DurationField(help_text="Time limit (minutes and seconds)", null=True, blank=True)
-
-#     def __str__(self):
-#         return self.name
-
 class Tournament(models.Model):
     ROUND_CHOICES = [
         (1, '1 Round'),
