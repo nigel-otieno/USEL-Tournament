@@ -18,7 +18,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, null=True)
     rules = models.CharField(max_length=100, null=True)
-    date = models.DateField()
+    date = models.DateTimeField()
     time = models.TimeField()
     image = models.ImageField(upload_to='tournament_images/', null=True, blank=True)
     location = models.CharField(max_length=255)
