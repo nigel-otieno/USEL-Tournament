@@ -35,12 +35,23 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <p><strong>Date:</strong> {{ tournament.date }}</p>
-            <p><strong>Time:</strong> {{ tournament.time }}</p>
-            <p><strong>Location:</strong> {{ tournament.location }}</p>
-            <p><strong>Rules:</strong> {{ tournament.rules }}</p>
-            <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
-            <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Date:</strong> {{ tournament.date }}</p>
+                    <p><strong>Time:</strong> {{ tournament.time }}</p>
+                    <p><strong>Location:</strong> {{ tournament.location }}</p>
+                    <p><strong>Rules:</strong> {{ tournament.rules }}</p>
+                    <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
+                    <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
+                </div>
+                <div class="col-md-6">
+                    {% if tournament.video_url %}
+                        <div class="embed-responsive embed-responsive-16by9 mb-6">
+                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ tournament.video_url|slice:'-11:' }}"></iframe>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
 
             <h3>Teams</h3>
             <div class="table-responsive">
