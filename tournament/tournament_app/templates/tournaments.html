@@ -8,23 +8,47 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background: linear-gradient(145deg, #e2e2e2, #cbddf8); /* Added gradient background */
+        border: none;
+        border-radius: 15px;
+        box-shadow: 20px 20px 60px #b3b3b3, -20px -20px 60px #ffffff;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 20px 20px 60px #a1a1a1, -20px -20px 60px #ffffff;
+        transform: scale(1.02);
     }
 
     .card-img-top {
         width: 100%;
         height: 200px; /* Set the height for the image */
         object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
     }
 
     .card-body {
         flex: 1; /* This makes the card body expand to fill the remaining space */
         display: flex;
         flex-direction: column;
+        padding: 15px;
     }
 
     .card-body > .btn-primary {
         margin-top: auto; /* Pushes the button to the bottom */
     }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tournament-card {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -56,7 +80,6 @@
     </div>
 </div>
 
-
 <div class="row" id="tournament-container">
     {% for tournament in tournaments %}
     <div class="col-md-4 mb-4 tournament-card" data-name="{{ tournament.name }}" data-date="{{ tournament.date }}" data-host="{{ tournament.created_by }}">
@@ -85,7 +108,7 @@
         const container = document.getElementById('tournament-container');
         const cards = Array.from(container.getElementsByClassName('tournament-card'));
         const sortBy = document.getElementById('sort').value;
-    
+
         cards.sort((a, b) => {
             let aValue, bValue;
             if (sortBy === 'date') {
@@ -101,12 +124,12 @@
                 aValue = a.getAttribute('data-gamemode').toLowerCase();
                 bValue = b.getAttribute('data-gamemode').toLowerCase();
             }
-            
+
             if (aValue < bValue) return -1;
             if (aValue > bValue) return 1;
             return 0;
         });
-    
+
         cards.forEach(card => container.appendChild(card));
     }
 
@@ -123,5 +146,5 @@
             }
         });
     }
-    </script>
+</script>
 {% endblock %}
