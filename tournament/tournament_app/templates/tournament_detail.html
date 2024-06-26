@@ -18,10 +18,12 @@
     <div class="form-inline mb-3">
         <label for="sort" class="mr-2">Sort by:</label>
         <select id="sort" class="form-control mr-2" onchange="sortTeams()">
-            <option value="name-asc" {% if sort_by == 'name-asc' %}selected{% endif %}>Team Name A-Z</option>
-            <option value="name-desc" {% if sort_by == 'name-desc' %}selected{% endif %}>Team Name Z-A</option>
-            <option value="score-asc" {% if sort_by == 'score-asc' %}selected{% endif %}>Lowest Score</option>
-            <option value="score-desc" {% if sort_by == 'score-desc' %}selected{% endif %}>Highest Score</option>
+            <option value="name-asc">Team Name A-Z</option>
+            <option value="name-desc">Team Name Z-A</option>
+            <option value="score-asc">Lowest Score</option>
+            <option value="score-desc">Highest Score</option>
+            <option value="time-asc">Shortest Time</option>
+            <option value="time-desc">Longest Time</option>
         </select>
     </div>
 
@@ -33,23 +35,12 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Date:</strong> {{ tournament.date }}</p>
-                    <p><strong>Time:</strong> {{ tournament.time }}</p>
-                    <p><strong>Location:</strong> {{ tournament.location }}</p>
-                    <p><strong>Rules:</strong> {{ tournament.rules }}</p>
-                    <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
-                    <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
-                </div>
-                <div class="col-md-6">
-                    {% if tournament.video_url %}
-                        <div class="embed-responsive embed-responsive-16by9 mb-6">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ tournament.video_url|slice:'-11:' }}"></iframe>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            <p><strong>Date:</strong> {{ tournament.date }}</p>
+            <p><strong>Time:</strong> {{ tournament.time }}</p>
+            <p><strong>Location:</strong> {{ tournament.location }}</p>
+            <p><strong>Rules:</strong> {{ tournament.rules }}</p>
+            <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
+            <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
 
             <h3>Teams</h3>
             <div class="table-responsive">
@@ -58,15 +49,23 @@
                         <tr>
                             <th>Team Name</th>
                             <th>Video URL</th>
-                            {% for round in round_headers %}
-                                <th>Score {{ round }}</th>
-                            {% endfor %}
+                            {% if tournament.game_mode == 'HighestScore' %}
+                                {% for round in round_headers %}
+                                    <th>Score {{ round }}</th>
+                                {% endfor %}
+                            {% elif tournament.game_mode == 'TimeAttack' %}
+                                {% for round in round_headers %}
+                                    <th>Time Score {{ round }}</th>
+                                {% endfor %}
+                            {% endif %}
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="team-table-body">
                         {% for team in teams %}
-                        <tr class="team-row" data-name="{{ team.name }}" data-score="{{ team.score_one|default:0|add:team.score_two|default:0|add:team.score_three|default:0 }}">
+                        <tr class="team-row" data-name="{{ team.name }}" 
+                            data-score="{{ team.total_score }}"
+                            data-time="{{ team.total_time_score.total_seconds }}">
                             <td>{{ team.name }}</td>
                             <td>
                                 {% if team.video_url %}
@@ -75,14 +74,38 @@
                                     No video available
                                 {% endif %}
                             </td>
-                            {% if tournament.rounds >= 1 %}
-                                <td {% if user == tournament.created_by or user == team.created_by %}contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)" onkeydown="handleEnter(event)"{% endif %}>{{ team.score_one }}</td>
-                            {% endif %}
-                            {% if tournament.rounds >= 2 %}
-                                <td {% if user == tournament.created_by or user == team.created_by %}contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)" onkeydown="handleEnter(event)"{% endif %}>{{ team.score_two }}</td>
-                            {% endif %}
-                            {% if tournament.rounds >= 3 %}
-                                <td {% if user == tournament.created_by or user == team.created_by %}contenteditable="true" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)" onkeydown="handleEnter(event)"{% endif %}>{{ team.score_three }}</td>
+                            {% if tournament.game_mode == 'HighestScore' %}
+                                {% if tournament.rounds >= 1 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
+                                        {{ team.score_one }}
+                                    </td>
+                                {% endif %}
+                                {% if tournament.rounds >= 2 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
+                                        {{ team.score_two }}
+                                    </td>
+                                {% endif %}
+                                {% if tournament.rounds >= 3 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
+                                        {{ team.score_three }}
+                                    </td>
+                                {% endif %}
+                            {% elif tournament.game_mode == 'TimeAttack' %}
+                                {% if tournament.rounds >= 1 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
+                                        {{ team.time_score_one|default:"00:00" }}
+                                    </td>
+                                {% endif %}
+                                {% if tournament.rounds >= 2 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_two', this.innerText)">
+                                        {{ team.time_score_two|default:"00:00" }}
+                                    </td>
+                                {% endif %}
+                                {% if tournament.rounds >= 3 %}
+                                    <td contenteditable="{{ team.can_edit }}" onblur="updateTimeScore('{{ team.id }}', 'time_score_three', this.innerText)">
+                                        {{ team.time_score_three|default:"00:00" }}
+                                    </td>
+                                {% endif %}
                             {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
@@ -99,13 +122,6 @@
     </div>
 </div>
 <script>
-    function sortTeams() {
-        const sortValue = document.getElementById('sort').value;
-        const url = new URL(window.location.href);
-        url.searchParams.set('sort', sortValue);
-        window.location.href = url.toString();
-    }
-
     function updateScore(teamId, scoreField, scoreValue) {
         fetch("{% url 'update_team_score' %}", {
             method: "POST",
@@ -124,7 +140,7 @@
             if (data.success) {
                 console.log("Score updated successfully");
             } else {
-                console.error("Error updating score: " + data.error);
+                console.error("Error updating score");
             }
         })
         .catch(error => {
@@ -132,11 +148,84 @@
         });
     }
 
-    function handleEnter(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            event.target.blur();
+    function updateTimeScore(teamId, timeScoreField, timeScoreValue) {
+        const formattedTimeScore = formatTimeScore(timeScoreValue);
+        fetch("{% url 'update_team_time_score' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                team_id: teamId,
+                time_score_field: timeScoreField,
+                time_score_value: formattedTimeScore
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Time score updated successfully");
+            } else {
+                console.error("Error updating time score:", data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+    
+    function formatTimeScore(timeScoreValue) {
+        const parts = timeScoreValue.split(':');
+        if (parts.length === 2) {
+            return `00:${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
+        } else if (parts.length === 1) {
+            return `00:00:${parts[0].padStart(2, '0')}`;
+        } else if (parts.length === 3) {
+            return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}:${parts[2].padStart(2, '0')}`;
+        } else {
+            return '00:00:00';
         }
+    }
+
+    function sortTeams() {
+        const tableBody = document.getElementById('team-table-body');
+        const rows = Array.from(tableBody.getElementsByClassName('team-row'));
+        const sortBy = document.getElementById('sort').value;
+
+        rows.sort((a, b) => {
+            let aValue, bValue;
+
+            if (sortBy.startsWith('name')) {
+                aValue = a.getAttribute('data-name').toLowerCase();
+                bValue = b.getAttribute('data-name').toLowerCase();
+                if (sortBy === 'name-asc') {
+                    return aValue.localeCompare(bValue);
+                } else {
+                    return bValue.localeCompare(aValue);
+                }
+            } else if (sortBy.startsWith('score')) {
+                aValue = parseInt(a.getAttribute('data-score'), 10);
+                bValue = parseInt(b.getAttribute('data-score'), 10);
+                if (sortBy === 'score-asc') {
+                    return aValue - bValue;
+                } else {
+                    return bValue - aValue;
+                }
+            } else if (sortBy.startsWith('time')) {
+                aValue = parseFloat(a.getAttribute('data-time'));
+                bValue = parseFloat(b.getAttribute('data-time'));
+                if (sortBy === 'time-asc') {
+                    return aValue - bValue;
+                } else {
+                    return bValue - aValue;
+                }
+            }
+
+            return 0;
+        });
+
+        rows.forEach(row => tableBody.appendChild(row));
     }
 </script>
 {% endblock %}

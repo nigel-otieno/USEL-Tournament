@@ -1,7 +1,5 @@
-# tournament_app/urls.py
 from django.urls import path
 from .views import *
-from . import views
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -16,5 +14,5 @@ urlpatterns = [
     path('team/<int:team_id>/upload_video/', upload_video, name='upload_video'),
     path('player/<int:pk>/', PlayerDetailView.as_view(), name='player_detail'),
     path('update_team_score/', update_team_score, name='update_team_score'),
-
+    path('update_team_time_score/', update_team_time_score, name='update_team_time_score'),
 ]

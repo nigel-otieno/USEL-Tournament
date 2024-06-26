@@ -8,6 +8,9 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json 
+from datetime import timedelta
+from django.utils import timezone
+from django.utils.dateparse import parse_duration
 
 @login_required
 def tournament_delete(request, tournament_id):
@@ -136,23 +139,27 @@ class TournamentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tournament = self.get_object()
-        teams = list(tournament.teams.all())
+        teams = tournament.teams.all()
+        user = self.request.user
 
-        sort_by = self.request.GET.get('sort', 'name-asc')
-        
-        if sort_by == 'name-asc':
-            teams = sorted(teams, key=lambda t: t.name.lower())
-        elif sort_by == 'name-desc':
-            teams = sorted(teams, key=lambda t: t.name.lower(), reverse=True)
-        elif sort_by == 'score-asc':
-            teams = sorted(teams, key=lambda t: (t.score_one or 0) + (t.score_two or 0) + (t.score_three or 0))
-        elif sort_by == 'score-desc':
-            teams = sorted(teams, key=lambda t: (t.score_one or 0) + (t.score_two or 0) + (t.score_three or 0), reverse=True)
-        
-        context['tournament'] = tournament
+        for team in teams:
+            team.can_edit = (user == team.created_by) or (user == tournament.created_by)
+
+            team.total_score = (
+                (team.score_one or 0) +
+                (team.score_two or 0) +
+                (team.score_three or 0)
+            )
+
+            team.total_time_score = (
+                (team.time_score_one or timezone.timedelta(seconds=0)) +
+                (team.time_score_two or timezone.timedelta(seconds=0)) +
+                (team.time_score_three or timezone.timedelta(seconds=0))
+            )
+
         context['teams'] = teams
-        context['sort_by'] = sort_by
         context['round_headers'] = range(1, tournament.rounds + 1)
+        context['tournament'] = tournament
         return context
 class TeamDetailView(DetailView):
     model = Team
@@ -182,6 +189,27 @@ def update_team_score(request):
                 return JsonResponse({"success": True})
             else:
                 return JsonResponse({"success": False, "error": "Permission denied"})
+        except Team.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Team not found"})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})
+
+@csrf_exempt
+def update_team_time_score(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        team_id = data.get("team_id")
+        time_score_field = data.get("time_score_field")
+        time_score_value = data.get("time_score_value")
+
+        try:
+            team = Team.objects.get(id=team_id)
+            time_score_duration = parse_duration(time_score_value)
+            setattr(team, time_score_field, time_score_duration)
+            team.save()
+            return JsonResponse({"success": True})
         except Team.DoesNotExist:
             return JsonResponse({"success": False, "error": "Team not found"})
         except Exception as e:
