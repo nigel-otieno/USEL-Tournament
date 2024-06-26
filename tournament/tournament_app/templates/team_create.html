@@ -3,13 +3,59 @@
 {% block title %}Create Team{% endblock %}
 
 {% block content %}
+<style>
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 50px; /* Add bottom margin to avoid overlapping footer */
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        font-weight: bold;
+    }
+    .form-control {
+        height: 45px;
+        font-size: 16px;
+    }
+    .btn-success {
+        width: 100%;
+        font-size: 18px;
+        padding: 10px;
+    }
+    h2 {
+        margin-bottom: 30px;
+    }
+    .btn-secondary {
+        margin-bottom: 20px;
+    }
+</style>
+
 <button onclick="history.back()" class="btn btn-secondary">Back</button>
 
-<div class="container mt-5">
+<div class="container">
     <h2>Create Team for {{ tournament.name }}</h2>
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% if field.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
         <button type="submit" class="btn btn-success">Create Team</button>
     </form>
 </div>

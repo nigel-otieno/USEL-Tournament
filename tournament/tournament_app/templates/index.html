@@ -4,6 +4,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
 <a href="{% url 'tournaments' %}" style="text-decoration: none; color: black">
     <div class="jumbotron shiny-card" >
         <h1 class="display-4">USEL Tournaments App</h1>
@@ -20,7 +21,7 @@
 </div>
 <style>
     .shiny-card {
-        background: linear-gradient(145deg, #ffffff, #e6e6e6);
+        background: linear-gradient(145deg, #d6d3d3, #cadcf7);
         border-radius: 15px;
         box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
         padding: 2rem;
@@ -30,6 +31,10 @@
     }
     .shiny-card:hover {
         box-shadow: 20px 20px 60px #c7c7c7, -20px -20px 60px #ffffff;
+    }
+    body {
+        background-color:   linear-gradient(145deg, #dac6c6, #cadcf7); /* Darker shade of grey */
+        color: #ffffff; /* White text for better readability on dark background */
     }
 </style>
 {% endblock %}
