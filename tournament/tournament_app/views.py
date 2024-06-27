@@ -34,6 +34,7 @@ def tournament_create(request):
             tournament = form.save(commit=False)
             tournament.created_by = request.user
             tournament.save()
+            messages.success(request, "Tournament successfully created!")
             return redirect('tournament_detail', pk=tournament.pk)
     else:
         form = TournamentForm()
