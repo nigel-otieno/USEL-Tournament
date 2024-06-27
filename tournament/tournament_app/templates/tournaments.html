@@ -8,10 +8,10 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        {% comment %} background: linear-gradient(145deg, #e2e2e2, #cbddf8); /* Added gradient background */ {% endcomment %}
+        background: linear-gradient(145deg, #e2e2e2, #cbddf8); /* Added gradient background */
         border: none;
-        border-radius: 15px;
-        box-shadow: 20px 20px 60px #b3b3b3, -10px -10px 30px #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.18);
         transition: all 0.3s ease;
     }
 
@@ -24,8 +24,8 @@
         width: 100%;
         height: 200px; /* Set the height for the image */
         object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
     }
 
     .card-body {
@@ -88,7 +88,7 @@
             {% if tournament.image %}
                 <img src="{{ tournament.image.url }}" class="card-img-top" alt="{{ tournament.name }}">
             {% else %}
-                <img src="{% static 'tournament_app/images/robot.png' %}" class="card-img-top" alt="No Image Available">
+                <img src="{% static 'tournament_app/images/usel.png' %}" class="card-img-top" alt="No Image Available">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ tournament.name }}</h5>
