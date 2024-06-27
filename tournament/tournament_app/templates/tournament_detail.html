@@ -40,7 +40,6 @@
     }
 
     .table thead th {
-        background-color: linear-gradient(to right, #c7f2ff, #3584df);
         color: white;
         text-align: center;
     }
@@ -69,8 +68,26 @@
     .team-name:hover {
         transform: scale(1.1);
     }
+
+    .fade-in {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .slide-in {
+        animation: slideIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
 </style>
-<div class="container mt-4">
+<div class="container mt-4 fade-in">
     <div class="row mb-3">
         <div class="col-md-6">
             <button onclick="history.back()" class="btn btn-secondary">Back</button>
@@ -82,7 +99,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="form-inline mb-3">
+    <div class="form-inline mb-3 slide-in">
         <label for="sort" class="mr-2">Sort by:</label>
         <select id="sort" class="form-control mr-2" onchange="sortTeams()">
             <option value="name-asc">Team Name A-Z</option>
@@ -94,7 +111,7 @@
         </select>
     </div>
 
-    <div class="card">
+    <div class="card slide-in">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2>{{ tournament.name }}</h2>
             {% if user.is_authenticated %}
@@ -141,7 +158,7 @@
                     </thead>
                     <tbody id="team-table-body">
                         {% for team in teams %}
-                        <tr class="team-row" data-name="{{ team.name }}" 
+                        <tr class="team-row slide-in" data-name="{{ team.name }}" 
                             data-score="{{ team.total_score }}"
                             data-time="{{ team.total_time_score.total_seconds }}">
                             
@@ -316,6 +333,16 @@
         });
 
         rows.forEach(row => tableBody.appendChild(row));
+    }
+
+    window.onload = function() {
+        // Add fade-in animation to the whole container
+        document.querySelector('.container').classList.add('fade-in');
+
+        // Add slide-in animation to specific elements
+        document.querySelectorAll('.slide-in').forEach(function(element) {
+            element.classList.add('slide-in');
+        });
     }
 </script>
 {% endblock %}
