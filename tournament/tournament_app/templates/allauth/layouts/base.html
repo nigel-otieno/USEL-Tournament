@@ -1,0 +1,146 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block head_title %}
+        {% endblock head_title %}
+    </title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {% block extra_head %}
+    {% endblock extra_head %}
+    <style>
+        .menu-container {
+            max-width: 600px; /* Changed max-width to make the border smaller */
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px; /* Add bottom margin to avoid overlapping footer */
+        
+        }
+        .menu-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .menu-list {
+            list-style-type: none;
+            padding: 0;
+            
+        }
+        .menu-list li {
+            margin-bottom: 10px;
+            text-align; center;
+
+        }
+        .menu-list a {
+            text-decoration: none;
+            color: #007bff;
+            text-align; center;
+        }
+        .menu-list a:hover {
+            text-decoration: underline;
+            color: green;
+        }
+        .footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <a class="navbar-brand" href="{% url 'index' %}">USEL TOURNAMENTS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tournaments' %}">Tournaments</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_logout' %}">Logout, {{ user.username }}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% block body %}
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                <strong>{% trans "Messages:" %}</strong>
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="container menu-container">
+            <div class="menu-header">{% trans "Menu:" %}</div>
+            <ul class="menu-list">
+                {% if user.is_authenticated %}
+                    {% url 'account_email' as email_url %}
+                    {% if email_url %}
+                        <li>
+                            <a href="{{ email_url }}">{% trans "Change Email" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_change_password' as change_password_url %}
+                    {% if change_password_url %}
+                        <li>
+                            <a href="{{ change_password_url }}">{% trans "Change Password" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'mfa_index' as mfa_url %}
+                    {% if mfa_url %}
+                        <li>
+                            <a href="{{ mfa_url }}">{% trans "Two-Factor Authentication" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'usersessions_list' as usersessions_list_url %}
+                    {% if usersessions_list_url %}
+                        <li>
+                            <a href="{{ usersessions_list_url }}">{% trans "Sessions" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_logout' as logout_url %}
+                    {% if logout_url %}
+                        <li>
+                            <a href="{{ logout_url }}">{% trans "Sign Out" %}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    {% url 'account_login' as login_url %}
+                    {% if login_url %}
+                        <li>
+                            <a href="{{ login_url }}">{% trans "Sign In" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_signup' as signup_url %}
+                    {% if signup_url %}
+                        <li>
+                            <a href="{{ signup_url }}">{% trans "Sign Up" %}</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+        {% block content %}
+        {% endblock content %}
+    {% endblock body %}
+    {% block extra_body %}
+    {% endblock extra_body %}
+</body>
+</html>
