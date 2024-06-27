@@ -5,20 +5,19 @@
 
 {% block content %}
 
-<a href="{% url 'tournaments' %}" style="text-decoration: none; color: black">
-    <div class="jumbotron shiny-card" >
-        <h1 class="display-4">USEL Tournaments App</h1>
-        <p class="lead">
-            The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
-            Users can create tournaments with different game modes, manage teams, and track scores seamlessly.
-        </p>
-        <p class="lead">Welcome, {{ user.username }}</p>
-    </div>    
-</a>
+<div id="main-card" class="jumbotron shiny-card">
+    <h1 class="display-4">USEL Tournaments App</h1>
+    <p class="lead">
+        The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
+        Users can create tournaments with different game modes, manage teams, and track scores seamlessly.
+    </p>
+    <p class="lead">Welcome, {{ user.username }}</p>
+</div>
 
 <div class="d-flex justify-content-center mb-2">
     <img src="{% static 'tournament_app/images/usel.png' %}" alt="Collage Image 1" class="img-fluid">
 </div>
+
 <style>
     .shiny-card {
         background: linear-gradient(145deg, #d6d3d3, #cadcf7);
@@ -28,13 +27,37 @@
         margin: 1rem 0;
         text-align: center;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
     .shiny-card:hover {
         box-shadow: 20px 20px 60px #c7c7c7, -20px -20px 60px #ffffff;
     }
+    .slide-out {
+        animation: slideOut 1s forwards;
+    }
+    @keyframes slideOut {
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
     body {
-        background-color:   linear-gradient(145deg, #dac6c6, #cadcf7); /* Darker shade of grey */
-        color: #ffffff; /* White text for better readability on dark background */
+        background-color: linear-gradient(145deg, #dac6c6, #cadcf7); /* Darker shade of grey */
+        color: #000000; /* White text for better readability on dark background */
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const card = document.getElementById('main-card');
+        card.addEventListener('click', function(event) {
+            event.preventDefault();
+            card.classList.add('slide-out');
+            setTimeout(() => {
+                window.location.href = "{% url 'tournaments' %}";
+            }, 1000); // Match this delay to the animation duration
+        });
+    });
+</script>
+
 {% endblock %}
