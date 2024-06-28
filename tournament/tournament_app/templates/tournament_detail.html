@@ -127,6 +127,7 @@
                     <p><strong>Rules:</strong> {{ tournament.rules }}</p>
                     <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
                     <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
+                    <p><strong>Tournament Type:</strong> {{ tournament.get_tournament_type_display }}</p> <!-- Add this line -->
                 </div>
                 <div class="col-md-6">
                     {% if tournament.video_url %}

@@ -4,10 +4,14 @@ from .models import *
 class TournamentForm(forms.ModelForm):
     class Meta:
         model = Tournament
-        fields = ['name', 'date', 'time', 'rules', 'location', 'game_mode', 'rounds', 'image', 'video_url']
+        fields = [
+            'name', 'description', 'rules', 'date', 'time', 'location',
+            'rounds', 'game_mode', 'tournament_type', 'image', 'video_url'
+        ]
         widgets = {
             'rounds': forms.RadioSelect,
             'game_mode': forms.RadioSelect,
+            'tournament_type': forms.RadioSelect, 
         }
 class TeamForm(forms.ModelForm):
     class Meta:

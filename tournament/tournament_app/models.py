@@ -14,6 +14,13 @@ class Tournament(models.Model):
         ('TimeAttack', 'Time Attack: Complete the objective in the shortest time possible.'),
         ('HighestScore', 'Highest Score: Achieve the highest score to win.'),
     ]
+    
+    TOURNAMENT_TYPE_CHOICES = [
+        ('RoboSports', 'RoboSports: Teams design 2 robots that compete with robots of another team.'),
+        ('RoboMission', 'RoboMission: Build and program a robot that solves challenges on a field.'),
+        ('FutureEngineers', 'FutureEngineers: Highest Score: Achieve the highest score to win.'),
+        ('FutureInnovators', 'FutureInnovators: Develop a robot project that helps solve real world problems.'),
+    ]
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, null=True)
@@ -25,6 +32,7 @@ class Tournament(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tournaments')
     rounds = models.IntegerField(choices=ROUND_CHOICES, default=1, help_text="Number of rounds")
     game_mode = models.CharField(max_length=20, choices=GAME_MODE_CHOICES, default='TimeAttack')
+    tournament_type = models.CharField(max_length=20, choices=TOURNAMENT_TYPE_CHOICES, default='RoboSports')
     video_url = models.URLField(max_length=250, blank=True, null=True)
 
     def __str__(self):
