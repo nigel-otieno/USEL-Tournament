@@ -58,6 +58,7 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 
 # Add Google client ID and secret
 SOCIALACCOUNT_PROVIDERS = {
