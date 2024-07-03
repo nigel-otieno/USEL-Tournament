@@ -1,19 +1,25 @@
 # templatetags/custom_filters.py
 from django import template
 from django.utils.safestring import SafeString
+import re
 
 register = template.Library()
 
 @register.filter
 def youtube_embed(value):
     """
-    Converts a YouTube URL to an embed URL.
-    Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> https://www.youtube.com/embed/dQw4w9WgXcQ
+    Converts any YouTube URL to an embed URL.
+    Handles:
+    - https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    - https://youtu.be/dQw4w9WgXcQ
+    - https://www.youtube.com/embed/dQw4w9WgXcQ
     """
-    if "youtube.com" in value:
-        return value.replace("watch?v=", "embed/")
-    return value
-
+    youtube_id_match = re.search(
+        r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})', value)
+    if youtube_id_match:
+        video_id = youtube_id_match.group(6)
+        return f"https://www.youtube.com/embed/{video_id}"
+    return None
 
 @register.filter
 def add(value, arg):

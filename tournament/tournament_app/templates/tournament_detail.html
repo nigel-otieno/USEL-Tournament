@@ -1,7 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block title %}Tournament Details{% endblock %}
-
+{% load custom_filters %}
 {% block content %}
 <style>
     .team-icon {
@@ -132,8 +132,9 @@
                 <div class="col-md-6">
                     {% if tournament.video_url %}
                         <div class="embed-responsive embed-responsive-16by9 mb-6">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ tournament.video_url|slice:'-11:' }}"></iframe>
+                            <iframe class="embed-responsive-item" src="{{ tournament.video_url|youtube_embed }}"></iframe>
                         </div>
+                        <p class="form-text text-muted">Make sure to upload unlisted YouTube videos that are checked off as embedded videos.</p>
                     {% endif %}
                 </div>
             </div>
