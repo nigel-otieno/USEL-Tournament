@@ -31,6 +31,11 @@
         background-color: #b9d8fc;
     }
 
+    .lock-icon {
+        margin-left: 5px;
+        color: red;
+    }
+
     th {
         background-color: #007bff;
         color: white;
@@ -127,7 +132,7 @@
                     <p><strong>Rules:</strong> {{ tournament.rules }}</p>
                     <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
                     <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
-                    <p><strong>Tournament Type:</strong> {{ tournament.get_tournament_type_display }}</p> <!-- Add this line -->
+                    <p><strong>Tournament Type:</strong> {{ tournament.get_tournament_type_display }}</p>
                 </div>
                 <div class="col-md-6">
                     {% if tournament.video_url %}
@@ -177,36 +182,37 @@
                             </td>
                             {% if tournament.game_mode == 'HighestScore' %}
                                 {% if tournament.rounds >= 1 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_one" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
-                                        {{ team.score_one }}
-                                    </td>
+                                    {% if team.can_edit and not team.score_one_edited or user == tournament.created_by %}
+                                        <td contenteditable="true" data-team-id="{{ team.id }}" data-field-name="score_one" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
+                                            {{ team.score_one }}
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {{ team.score_one }}
+                                            {% if team.score_one_edited %}
+                                                <i class="fa fa-lock lock-icon"></i>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
                                 {% endif %}
-                                {% comment %} {% if tournament.rounds >= 2 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_two" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
-                                        {{ team.score_two }}
-                                    </td>
-                                {% endif %}
-                                {% if tournament.rounds >= 3 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_three" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
-                                        {{ team.score_three }}
-                                    </td>
-                                {% endif %} {% endcomment %}
                             {% elif tournament.game_mode == 'TimeAttack' %}
                                 {% if tournament.rounds >= 1 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_one" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
-                                        {{ team.time_score_one|default:"00:00" }}
-                                    </td>
+                                    {% if team.can_edit and not team.time_score_one_edited or user == tournament.created_by %}
+                                        <td contenteditable="true" data-team-id="{{ team.id }}" data-field-name="time_score_one" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
+                                            {{ team.time_score_one|default:"00:00" }}
+                                        
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {{ team.time_score_one|default:"00:00" }}
+                                            {% if team.time_score_one_edited %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                              </svg>                                           
+                                               {% endif %}
+                                        </td>
+                                    {% endif %}
                                 {% endif %}
-                                {% comment %} {% if tournament.rounds >= 2 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_two" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_two', this.innerText)">
-                                        {{ team.time_score_two|default:"00:00" }}
-                                    </td>
-                                {% endif %}
-                                {% if tournament.rounds >= 3 %}
-                                    <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_three" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_three', this.innerText)">
-                                        {{ team.time_score_three|default:"00:00" }}
-                                    </td>
-                                {% endif %} {% endcomment %}
                             {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
@@ -223,7 +229,7 @@
     </div>
 </div>
 <script>
-   function handleEnter(event) {
+    function handleEnter(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             event.target.blur();
@@ -247,6 +253,11 @@
         .then(data => {
             if (data.success) {
                 console.log("Score updated successfully");
+                const cell = document.querySelector(`td[data-team-id='${teamId}'][data-field-name='${scoreField}']`);
+                cell.removeAttribute("contenteditable");
+                const lockIcon = document.createElement("i");
+                lockIcon.className = "fa fa-lock lock-icon";
+                cell.appendChild(lockIcon);
             } else {
                 console.error("Error updating score");
             }
@@ -274,6 +285,11 @@
         .then(data => {
             if (data.success) {
                 console.log("Time score updated successfully");
+                const cell = document.querySelector(`td[data-team-id='${teamId}'][data-field-name='${timeScoreField}']`);
+                cell.removeAttribute("contenteditable");
+                const lockIcon = document.createElement("i");
+                lockIcon.className = "fa fa-lock lock-icon";
+                cell.appendChild(lockIcon);
             } else {
                 console.error("Error updating time score:", data.error);
             }

@@ -59,12 +59,18 @@ class Team(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_teams')
     members = models.ManyToManyField(Players, related_name='teams')
     score_one = models.IntegerField(null=True, blank=True)
+    score_one_edited = models.BooleanField(default=False)  # Add this field
     score_two = models.IntegerField(null=True, blank=True)
+    score_two_edited = models.BooleanField(default=False)  # Add this field
     score_three = models.IntegerField(null=True, blank=True)
+    score_three_edited = models.BooleanField(default=False)  # Add this field
     total_score = models.IntegerField(null=True, blank=True)
     time_score_one = models.DurationField(null=True, blank=True)
+    time_score_one_edited = models.BooleanField(default=False)  # Add this field
     time_score_two = models.DurationField(null=True, blank=True)
+    time_score_two_edited = models.BooleanField(default=False)  # Add this field
     time_score_three = models.DurationField(null=True, blank=True)
+    time_score_three_edited = models.BooleanField(default=False)  # Add this field
     time_total_score = models.DurationField(null=True, blank=True)
     video_url = models.URLField(max_length=250, blank=True, null=True)
     coach_email = models.CharField(max_length=255, blank=True, null=True)

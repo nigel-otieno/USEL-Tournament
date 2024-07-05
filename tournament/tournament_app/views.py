@@ -184,12 +184,15 @@ def update_team_score(request):
         team_id = data.get("team_id")
         score_field = data.get("score_field")
         score_value = data.get("score_value")
-
+        
         try:
             team = Team.objects.get(id=team_id)
             tournament = team.tournament.first()  # Assuming a team belongs to only one tournament
-            if request.user == tournament.created_by or request.user == team.created_by:
+            
+            if request.user == tournament.created_by or (request.user == team.created_by and not getattr(team, f"{score_field}_edited")):
                 setattr(team, score_field, score_value)
+                if request.user != tournament.created_by:
+                    setattr(team, f"{score_field}_edited", True)
                 team.save()
                 return JsonResponse({"success": True})
             else:
@@ -198,10 +201,11 @@ def update_team_score(request):
             return JsonResponse({"success": False, "error": "Team not found"})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
-
+    
     return JsonResponse({"success": False, "error": "Invalid request"})
 
 @csrf_exempt
+@login_required
 def update_team_time_score(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -211,10 +215,17 @@ def update_team_time_score(request):
 
         try:
             team = Team.objects.get(id=team_id)
+            tournament = team.tournament.first()  # Assuming a team belongs to only one tournament
             time_score_duration = parse_duration(time_score_value)
-            setattr(team, time_score_field, time_score_duration)
-            team.save()
-            return JsonResponse({"success": True})
+            
+            if request.user == tournament.created_by or (request.user == team.created_by and not getattr(team, f"{time_score_field}_edited")):
+                setattr(team, time_score_field, time_score_duration)
+                if request.user != tournament.created_by:
+                    setattr(team, f"{time_score_field}_edited", True)
+                team.save()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "error": "Permission denied"})
         except Team.DoesNotExist:
             return JsonResponse({"success": False, "error": "Team not found"})
         except Exception as e:
