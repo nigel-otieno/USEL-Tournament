@@ -134,7 +134,6 @@
                         <div class="embed-responsive embed-responsive-16by9 mb-6">
                             <iframe class="embed-responsive-item" src="{{ tournament.video_url|youtube_embed }}"></iframe>
                         </div>
-                        <p class="form-text text-muted">Make sure to upload unlisted YouTube videos that are checked off as embedded videos.</p>
                     {% endif %}
                 </div>
             </div>
@@ -182,7 +181,7 @@
                                         {{ team.score_one }}
                                     </td>
                                 {% endif %}
-                                {% if tournament.rounds >= 2 %}
+                                {% comment %} {% if tournament.rounds >= 2 %}
                                     <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_two" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
                                         {{ team.score_two }}
                                     </td>
@@ -191,14 +190,14 @@
                                     <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="score_three" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
                                         {{ team.score_three }}
                                     </td>
-                                {% endif %}
+                                {% endif %} {% endcomment %}
                             {% elif tournament.game_mode == 'TimeAttack' %}
                                 {% if tournament.rounds >= 1 %}
                                     <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_one" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
                                         {{ team.time_score_one|default:"00:00" }}
                                     </td>
                                 {% endif %}
-                                {% if tournament.rounds >= 2 %}
+                                {% comment %} {% if tournament.rounds >= 2 %}
                                     <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_two" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_two', this.innerText)">
                                         {{ team.time_score_two|default:"00:00" }}
                                     </td>
@@ -207,7 +206,7 @@
                                     <td contenteditable="{{ team.can_edit }}" data-team-id="{{ team.id }}" data-field-name="time_score_three" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_three', this.innerText)">
                                         {{ team.time_score_three|default:"00:00" }}
                                     </td>
-                                {% endif %}
+                                {% endif %} {% endcomment %}
                             {% endif %}
                             <td class="text-right">
                                 {% if user == team.created_by and team.members.count < 3 %}
@@ -345,6 +344,14 @@
         document.querySelectorAll('.slide-in').forEach(function(element) {
             element.classList.add('slide-in');
         });
+
+        // Automatically sort teams based on game mode when the page loads
+        if ("{{ tournament.game_mode }}" === "TimeAttack") {
+            document.getElementById('sort').value = 'time-asc';
+        } else if ("{{ tournament.game_mode }}" === "HighestScore") {
+            document.getElementById('sort').value = 'score-desc';
+        }
+        sortTeams();
     }
 </script>
 {% endblock %}

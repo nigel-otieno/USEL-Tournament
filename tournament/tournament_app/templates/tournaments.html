@@ -48,14 +48,14 @@
         animation: fadeIn 0.5s ease-in-out;
     }
 
-    .form-inline-search{
+    .form-inline-search {
         margin-bottom: 5%;
     }
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="mt-4 mb-3">Tournaments</h1>
-    {% if user.is_authenticated %}
+    {% if user.is_staff or user.is_superuser %}
     <div class="text-right">
         <a href="{% url 'tournament_create' %}" class="btn btn-success">Create Tournament</a>
     </div>

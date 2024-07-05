@@ -16,15 +16,14 @@ class TournamentForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'video_url', 'coach']
+        fields = ['name', 'video_url', 'coach_email']
 
 class PlayerForm(forms.ModelForm):
     class Meta:
         model = Players
         fields = [
-            'first_name', 'last_name', 'age', 'emergency_contact_first_name',
-            'emergency_contact_last_name', 'emergency_contact_phone_number',
-            'country', 'state_province', 'zip_code', 'address'
+            'first_name', 'last_name', 'age' 
+            , 'state_province', 'country'
         ]
 
 class BracketForm(forms.ModelForm):

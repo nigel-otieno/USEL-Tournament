@@ -11,12 +11,12 @@
     </div>
     <div class="card-body">
         <p><strong>Age:</strong> {{ player.age }}</p>
-        <p><strong>Emergency Contact:</strong> {{ player.emergency_contact_first_name }} {{ player.emergency_contact_last_name }}</p>
-        <p><strong>Emergency Contact Phone Number:</strong> {{ player.emergency_contact_phone_number }}</p>
-        <p><strong>Address:</strong> {{ player.address }}</p> <!-- Added address field -->
+        {% comment %} <p><strong>Emergency Contact:</strong> {{ player.emergency_contact_first_name }} {{ player.emergency_contact_last_name }}</p> {% endcomment %}
+        {% comment %} <p><strong>Emergency Contact Phone Number:</strong> {{ player.emergency_contact_phone_number }}</p> {% endcomment %}
+        {% comment %} <p><strong>Address:</strong> {{ player.address }}</p> <!-- Added address field --> {% endcomment %}
         <p><strong>Country:</strong> {{ player.country }}</p>
         <p><strong>State/Province:</strong> {{ player.state_province }}</p>
-        <p><strong>Zip Code:</strong> {{ player.zip_code }}</p>
+        {% comment %} <p><strong>Zip Code:</strong> {{ player.zip_code }}</p> {% endcomment %}
     </div>
 </div>
 {% endblock %}

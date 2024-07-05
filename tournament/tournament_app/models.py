@@ -6,8 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 class Tournament(models.Model):
     ROUND_CHOICES = [
         (1, '1 Round'),
-        (2, '2 Rounds'),
-        (3, '3 Rounds'),
+        # (2, '2 Rounds'),
+        # (3, '3 Rounds'),
     ]
 
     GAME_MODE_CHOICES = [
@@ -67,7 +67,7 @@ class Team(models.Model):
     time_score_three = models.DurationField(null=True, blank=True)
     time_total_score = models.DurationField(null=True, blank=True)
     video_url = models.URLField(max_length=250, blank=True, null=True)
-    coach = models.CharField(max_length=255, blank=True, null=True)
+    coach_email = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name

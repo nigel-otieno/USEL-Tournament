@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import *
 from .forms import *
@@ -26,7 +26,11 @@ def tournament_delete(request, tournament_id):
     
     return render(request, 'tournament_confirm_delete.html', {'tournament': tournament})
 
+def check_staff_or_superuser(user):
+    return user.is_staff or user.is_superuser
+
 @login_required
+@user_passes_test(check_staff_or_superuser)
 def tournament_create(request):
     if request.method == 'POST':
         form = TournamentForm(request.POST, request.FILES)

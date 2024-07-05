@@ -14,7 +14,8 @@
         {% endif %}
     </div>
     <div class="card-body">
-        <p><strong>Video URL:</strong> 
+      <p><strong>Coach Contact:</strong> {{team.coach_email}}</p>
+        <p><strong>Youtube URL:</strong> 
             {% if team.video_url %}
             <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary">View Video</a>
             {% else %}
@@ -26,8 +27,6 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#uploadVideoModal">Upload Video</button>
           </p>
         {% endif %}
-        <p><strong>Guardian Name:</strong> {{ team.guardian_name }}</p>
-        <p><strong>Guardian Contact:</strong> {{ team.guardian_contact }}</p>
         <h3>Players</h3>
         <ul class="list-group">
             {% for player in team.members.all %}
@@ -41,7 +40,6 @@
         </ul>
     </div>
 </div>
-
 <!-- Upload Video Modal -->
 <div class="modal fade" id="uploadVideoModal" tabindex="-1" aria-labelledby="uploadVideoModalLabel" aria-hidden="true">
   <div class="modal-dialog">
