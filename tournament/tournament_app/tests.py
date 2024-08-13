@@ -84,7 +84,7 @@ class New_Page_Test_Tournament(TestCase):
         self.assertContains(response, '<label')
         self.assertContains(response, 'csrfmiddlewaretoken')
         
-class New_Page_Tes_Is_Valid(TestCase):
+class New_Page_TesT_Is_Valid(TestCase):
     
     def setUp(self):
         self.form = TournamentForm
@@ -98,4 +98,18 @@ class New_Page_Tes_Is_Valid(TestCase):
         self.assertTemplateNotUsed('tournament')
         self.assertEqual(response.status_code, 200)
         
-    
+
+class Players_Model_Test(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="nigel", password='123456')
+        self.tournament = Tournament.objects.create(name='usel', date=timezone.now(), time=timezone.now().time(), location='upland', created_by=self.user)
+        self.player = Players.objects.create(first_name='thomas', last_name='edwin', age=23, address='517 H Lemon')
+        
+    def test_player_creation(self):
+        response = self.client.get(f'/player/{self.player.id}/')
+        self.assertTemplateUsed('player_detail')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<button')
+        self.assertContains(response, '<div')
+        self.assertContains(response, 'Player Detail')
+
