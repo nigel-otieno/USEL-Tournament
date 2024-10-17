@@ -16,7 +16,7 @@ class TournamentForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'video_url', 'coach_email']
+        fields = ['name', 'coach_email']
 
 class PlayerForm(forms.ModelForm):
     class Meta:
