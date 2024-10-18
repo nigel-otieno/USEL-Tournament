@@ -31,7 +31,8 @@ DEBUG = True
 
 # Convert comma-separated ALLOWED_HOSTS to a list
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ['useltournaments.pythonanywhere.com']
+# settings.py
+ALLOWED_HOSTS = ['useltournaments.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
