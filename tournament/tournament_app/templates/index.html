@@ -7,11 +7,51 @@
 
 <div id="main-card" class="jumbotron shiny-card">
     <h1 class="display-4">USEL Tournaments App</h1>
+    <p class="lead">Welcome {{ user.username }}</p>
     <p class="lead">
         The Tournament App is a robust platform designed to facilitate the creation, management, and participation in various tournaments. 
         Users can create tournaments with different game modes, manage teams, and track scores seamlessly.
     </p>
-    <p class="lead">Welcome {{ user.username }}</p>
+    <p class="lead"><strong>Instructions for Using the USEL Tournaments App</strong><br>
+       <br> <strong>Navigation Bar Overview:</strong>
+        At the top of the page, you will see options for Login, Sign Up, and Tournaments.
+        If you do not have a profile, please click Sign Up.
+        
+        <br><br><strong>Creating an Account:</strong>
+        On the Sign Up page, you will be asked to enter a username, email address, and password.
+        After successfully signing up, you will be redirected to the Sign In page.
+        Sign in using the credentials you just created (the same username and password you used during sign up).
+        
+        <br><br><strong>After Signing In:</strong>
+        Once signed in, you will be redirected to the Tournaments page, where a list of tournaments will be displayed.
+        
+        <br><br><strong>For Existing Users:</strong>
+        If you already have an account, simply click Sign In and enter your credentials to be redirected to the Tournaments page.
+        
+        <br><br><strong>Viewing Tournaments Without Signing In:</strong>
+        If you would like to view tournaments without creating an account or signing in, click the Tournaments section on the navigation bar.
+        You will be able to browse the list of available tournaments.
+        
+        <br><br><strong>Participating in a Tournament:</strong>
+        After finding the tournament you’d like to participate in, click on the card image of the tournament. This will redirect you to that specific tournament's page.
+        
+        <br><br><strong>Creating a Team:</strong>
+        On the tournament page, you will find a green Create Team button.
+        Click it and enter the team name as well as the coach’s email.
+        After creating the team, you will see a section in the tournament leaderboard where you can:
+        Input a time for time-based challenges or
+        Enter an integer value for the highest score in the corresponding category.
+
+        <br><br><strong>Adding Players to the Team:</strong>
+        You can add up to a maximum of 3 players to your team in the player section.
+
+        <br><br><strong>Submitting a Video:</strong>
+        After adding players, click View Team Details to submit your official video entry.
+        Only YouTube or Vimeo links will be accepted.
+
+        <br><br><strong>Inputting a Score:</strong>
+        Once you have submitted your video, input your score for the tournament challenge.
+        </p>
 </div>
 
 <div class="d-flex justify-content-center mb-2">
