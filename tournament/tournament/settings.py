@@ -168,6 +168,9 @@ EMAIL_HOST_PASSWORD = 'cihk ccme ynil rfvn'  # The password for your email or Ap
 DEFAULT_FROM_EMAIL = 'support@usengineeringleague.org'
 
 
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[US EngineeringLeague] "
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 # Static files (CSS, JavaScript, Images)
@@ -191,3 +194,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+SITE_ID = 1  # Ensure this is the correct ID for your site

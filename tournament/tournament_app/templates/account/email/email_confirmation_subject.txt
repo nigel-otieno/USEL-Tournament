@@ -1,4 +1,5 @@
 {% load i18n %}
 {% autoescape off %}
-{% blocktrans %}Please Confirm Your Email Address{% endblocktrans %}
+{% blocktrans %}  Hello from US EngineeringLeague! Please Confirm Your Email Address
+{% endblocktrans %}
 {% endautoescape %}
