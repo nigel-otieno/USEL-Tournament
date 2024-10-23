@@ -5,84 +5,266 @@
 
 {% block content %}
 
-<div id="main-card" class="jumbotron shiny-card">
-    <h1 class="display-4">USEL Tournaments App</h1>
-    <p class="lead"><strong>Welcome {{ user.username }}</strong></p>
-    <p class="lead"><strong>INSTRUCTIONS FOR USING THE USEL TOURNAMENTS APP</strong><br>
-        <br> <strong>NAVIGATION BAR OVERVIEW:</strong><br>
-         At the top of the page, you will see options for Login, Sign Up, and Tournaments.
-         If you do not have a profile, please click Sign Up.
-         
-         <br><br><strong>CREATING AN ACCOUNT:</strong><br>
-         On the Sign Up page, you will be asked to enter a username, email address, and password.
-         After successfully signing up, you will be redirected to the Sign In page.
-         Sign in using the credentials you just created (the same username and password you used during sign up).
-         
-         <br><br><strong>AFTER SIGNING IN:</strong><br>
-         Once signed in, you will be redirected to the Tournaments page, where a list of tournaments will be displayed.
-         
-         <br><br><strong>FOR EXISTING USERS:</strong><br>
-         If you already have an account, simply click Sign In and enter your credentials to be redirected to the Tournaments page.
-         
-         <br><br><strong>VIEWING TOURNAMENTS WITHOUT SIGNING IN:</strong><br>
-         If you would like to view tournaments without creating an account or signing in, click the Tournaments section on the navigation bar.
-         You will be able to browse the list of available tournaments.
-         
-         <br><br><strong>PARTICIPATING IN A TOURNAMENT:</strong><br>
-         After finding the tournament you’d like to participate in, click on the card image of the tournament. This will redirect you to that specific tournament's page.
-         
-         <br><br><strong>CREATING A TEAM:</strong><br>
-         On the tournament page, you will find a green Create Team button.
-         Click it and enter the team name as well as the coach’s email.
-         After creating the team, you will see a section in the tournament leaderboard where you can:
-         Input a time for time-based challenges or
-         Enter an integer value for the highest score in the corresponding category.
- 
-         <br><br><strong>ADDING PLAYERS TO THE TEAM:</strong><br>
-         You can add up to a maximum of 3 players to your team in the player section.
- 
-         <br><br><strong>SUBMITTING A VIDEO:</strong><br>
-         After adding players, click View Team Details to submit your official video entry.
-         Only YouTube or Vimeo links will be accepted.
- 
-         <br><br><strong>INPUTTING A SCORE:</strong><br>
-         Once you have submitted your video, input your score for the tournament challenge.
-         </p> 
-</div>
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="mx-auto text-center">
+                <img src="{% static 'tournament_app/images/comphome.png' %}" class="rounded" alt="...">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ps-lg-6 ps-xl-10 w-lg-90">
+                <div class="mb-4">
+                    <h2 class="w-90">INSTRUCTIONS FOR USING THE USEL TOURNAMENTS APP</h2>
+                </div>
+                <div class="main-title title-left">Welcome {{ user.username }}<span class="line-left"></span></div>
+                <div id="accordion" class="accordion-style">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">NAVIGATION BAR OVERVIEW:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-bs-parent="#accordion" style="">
+                            <div class="card-body position-relative">  At the top of the page, you will see options for Login, Sign Up, and Tournaments.
+                                If you do not have a profile, please click Sign Up.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">CREATING AN ACCOUNT:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                On the Sign Up page, you will be asked to enter a username, email address, and password.
+                                After successfully signing up, you will be redirected to the Sign In page.
+                                Sign in using the credentials you just created (the same username and password you used during sign up).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">AFTER SIGNING IN:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                Once signed in, you will be redirected to the Tournaments page, where a list of tournaments will be displayed.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">FOR EXISTING USERS:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                If you already have an account, simply click Sign In and enter your credentials to be redirected to the Tournaments page.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">VIEWING TOURNAMENTS WITHOUT SIGNING IN:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                            After finding the tournament you’d like to participate in, click on the card image of the tournament. This will redirect you to that specific tournament's page.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSix">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">PARTICIPATING IN A TOURNAMENT:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                After finding the tournament you’d like to participate in, click on the card image of the tournament. This will redirect you to that specific tournament's page.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSeven">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">CREATING A TEAM:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                On the tournament page, you will find a green Create Team button.
+                                Click it and enter the team name as well as the coach’s email.
+                                After creating the team, you will see a section in the tournament leaderboard where you can:
+                                Input a time for time-based challenges or
+                                Enter an integer value for the highest score in the corresponding category.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingEight">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">ADDING PLAYERS TO THE TEAM:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                You can add up to a maximum of 3 players to your team in the player section.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">SUBMITTING A VIDEO:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                After adding players, click View Team Details to submit your official video entry.
+                                Only YouTube or Vimeo links will be accepted.                           
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">INPUTTING A SCORE:</button>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordion">
+                            <div class="card-body position-relative">
+                                Once you have submitted your video, input your score for the tournament challenge.                      
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="d-flex justify-content-center mb-2">
-    <img src="{% static 'tournament_app/images/usel.png' %}" alt="Collage Image 1" class="img-fluid">
-</div>
 
+
+</div>
 <style>
-    .shiny-card {
-        background: linear-gradient(145deg, #d6d3d3, #cadcf7);
-        border-radius: 15px;
-        box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
-        padding: 2rem;
-        margin: 1rem 0;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
+    body{
+    margin-top:20px;
+    background-color: #f8f9fa !important;
     }
-    .shiny-card:hover {
-        box-shadow: 20px 20px 60px #c7c7c7, -20px -20px 60px #ffffff;
+    .accordion-style .card {
+        background: transparent;
+        box-shadow: none;
+        margin-bottom: 15px;
+        margin-top: 0 !important;
+        border: none;
     }
-    .slide-out {
-        animation: slideOut 1s forwards;
+    .accordion-style .card:last-child {
+        margin-bottom: 0;
     }
-    @keyframes slideOut {
-        to {
-            transform: translateX(100%);
-            opacity: 0;
+    .accordion-style .card-header {
+        border: 0;
+        background: none;
+        padding: 0;
+        border-bottom: none;
+    }
+    .accordion-style .btn-link {
+        color: #f99218;
+        position: relative;
+        display: block;
+        width: 100%;
+        text-align: left;
+        white-space: normal;
+        box-shadow: none;
+        padding: 15px 55px;
+        text-decoration: none;
+    }
+    .mx-auto {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+    .rounded {
+        border-radius: 0.25rem !important;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: top;
+    }
+    .accordion-style .btn-link:hover {
+        text-decoration: none;
+    }
+    .accordion-style .btn-link.collapsed {
+        color: #575a7b;
+    }
+    .accordion-style .btn-link.collapsed:after {
+        content: "+";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        font-size: 1rem;
+        color: #f99218;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-50%);
+        box-shadow: 8px 8px 30px 0 rgba(0, 0, 0, 0.12);
+    }
+    .accordion-style .btn-link:after {
+        content: "-";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        font-size: 1rem;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f99218;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-50%);
+        box-shadow: 8px 8px 30px 0 rgba(0, 0, 0, 0.12);
+    }
+    .accordion-style .card-body {
+        padding-top: 0px;
+        padding-left: 3.5rem;
+        padding-bottom: 0;
+    }
+    .accordion-style .card-body:before {
+        position: absolute;
+        content: "";
+        border-style: dashed;
+        border-width: 0 0 0 1.2px;
+        border-color: #f99218;
+        left: 20px;
+        top: 0;
+        z-index: 1;
+        bottom: 0;
+    }
+    @media screen and (max-width: 767px) {
+        .accordion-style .btn-link {
+            padding: 15px 40px 15px 55px;
         }
     }
-    body {
-        background-color: linear-gradient(145deg, #dac6c6, #cadcf7); /* Darker shade of grey */
-        color: #000000; /* White text for better readability on dark background */
+    @media screen and (max-width: 575px) {
+        .accordion-style .btn-link {
+            padding: 15px 30px 15px 55px;
+        }
     }
 </style>
-
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const card = document.getElementById('main-card');
@@ -95,5 +277,11 @@
         });
     });
 </script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS (with Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 {% endblock %}
