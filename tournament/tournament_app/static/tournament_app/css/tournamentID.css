@@ -1,0 +1,95 @@
+.team-icon {
+    margin-right: 5px;
+}
+
+.team-name {
+    background: linear-gradient(to right, #25ccff, #3584df);
+    color: white;
+    box-shadow: 0 4px 8px rgba(247, 20, 20, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+td[contenteditable="true"] {
+    background-color: #e8f0fe;
+    border: 1px dashed #007bff;
+    cursor: pointer;
+}
+
+td[contenteditable="true"]:hover {
+    background-color: #d0e7fd;
+}
+
+td[contenteditable="true"]:focus {
+    outline: none;
+    background-color: #b9d8fc;
+}
+
+.lock-icon {
+    margin-left: 5px;
+    color: red;
+}
+
+/* Table Header Styling */
+th {
+    background-color: #f0f0f0; /* Adjusted background color */
+    color: black; /* Set text color to black */
+    padding: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+}
+
+.table thead th {
+    color: black; /* Reinforce black color for all headers */
+    text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.team-name[data-score='1'] {
+    background-color: #ffd900; /* Gold */
+}
+
+.team-name[data-score='2'] {
+    background-color: #C0C0C0; /* Silver */
+}
+
+.team-name[data-score='3'] {
+    background-color: #CD7F32; /* Bronze */
+}
+
+.team-name {
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.team-name:hover {
+    transform: scale(1.1);
+}
+
+/* Center the button group in the column */
+.text-center .button-group {
+    display: inline-flex;
+    gap: 10px; /* Space between buttons */
+}
+
+/* Tournament Detail Card Styling */
+.tournamentDetail.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+}
+
+.tournamentDetail.card-header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tournamentDetail.card-body {
+    padding: 15px;
+}

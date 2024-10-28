@@ -1,58 +1,44 @@
 {% extends "base_generic.html" %}
 {% load static %}
 {% block title %}Tournaments{% endblock %}
-
+{% load custom_filters %}
 {% block content %}
-<style>
-    .card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(145deg, #e2e2e2, #cbddf8); /* Added gradient background */
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 0 30px rgba(0,0,0,0.18);
-        transition: all 0.3s ease;
-    }
 
-    .card:hover {
-        box-shadow: 20px 20px 60px #a1a1a1, -20px -20px 60px #ffffff;
-        transform: scale(1.02);
-    }
-
-    .card-img-top {
-        width: 100%;
-        height: 200px; /* Set the height for the image */
-        object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-    }
-
-    .card-body {
-        flex: 1; /* This makes the card body expand to fill the remaining space */
-        display: flex;
-        flex-direction: column;
-        padding: 15px;
-    }
-
-    .card-body > .btn-primary {
-        margin-top: auto; /* Pushes the button to the bottom */
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .tournament-card {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .form-inline-search {
-        margin-bottom: 5%;
-    }
-</style>
-
+<div id="svg-background-wrapper">
+    <svg id="svg-background" class="position-absolute" viewBox="0 0 1920 880">
+        <g>
+          <linearGradient id="svg-gradient" x1="0" x2="1" y1="0" y2="0">
+            <stop stop-color="hsl(217, 88%, 33.7%)" offset="0"></stop>
+            <stop stop-color="hsl(217, 88%, 75.1%)" offset="1"></stop>
+          </linearGradient>
+          <path d="" fill="url(#svg-gradient)" opacity="0.4">
+            <animate
+                     attributeName="d"
+                     dur="33s"
+                     repeatCount="indefinite"
+                     values="M0 0L 0 804.2328934685746Q 320 597.3613372284876  640 571.0708916590191T 1280 512.0661063245175T 1920 301.8788007488083L 1920 0 Z;M0 0L 0 877.6839081951588Q 320 668.0720922803877  640 649.0018928349388T 1280 328.7087077664202T 1920 162.95038242563396L 1920 0 Z;M0 0L 0 724.9886210051687Q 320 661.4364572061575  640 623.2173947479624T 1280 359.20353038907734T 1920 135.51673041732283L 1920 0 Z;M0 0L 0 804.2328934685746Q 320 597.3613372284876  640 571.0708916590191T 1280 512.0661063245175T 1920 301.8788007488083L 1920 0 Z"
+                     ></animate>
+          </path>
+          <path d="" fill="url(#svg-gradient)" opacity="0.4">
+            <animate
+                     attributeName="d"
+                     dur="33s"
+                     repeatCount="indefinite"
+                     values="M0 0L 0 765.7607191473613Q 320 641.7853945676919  640 624.2534689988059T 1280 365.27264408032966T 1920 190.38947978522663L 1920 0 Z;M0 0L 0 842.1984196370487Q 320 570.6690721707517  640 540.6844954979398T 1280 439.92879442880593T 1920 200.29713960445451L 1920 0 Z;M0 0L 0 796.6802345094818Q 320 721.9216894353016  640 696.8815669355181T 1280 373.6367381440213T 1920 196.63169821789495L 1920 0 Z;M0 0L 0 765.7607191473613Q 320 641.7853945676919  640 624.2534689988059T 1280 365.27264408032966T 1920 190.38947978522663L 1920 0 Z"
+                     ></animate>
+          </path>
+          <path d="" fill="url(#svg-gradient)" opacity="0.4">
+            <animate
+                     attributeName="d"
+                     dur="33s"
+                     repeatCount="indefinite"
+                     values="M0 0L 0 801.7562714943509Q 320 634.0247183381232  640 605.7090791951217T 1280 503.9393370140325T 1920 224.7551247480177L 1920 0 Z;M0 0L 0 821.0401780336218Q 320 670.8690783540507  640 637.0744123031742T 1280 456.40745286432224T 1920 278.1294357804296L 1920 0 Z;M0 0L 0 744.0534225112256Q 320 637.6425395409125  640 593.2079605185819T 1280 457.03995196824286T 1920 254.87693899994804L 1920 0 Z;M0 0L 0 801.7562714943509Q 320 634.0247183381232  640 605.7090791951217T 1280 503.9393370140325T 1920 224.7551247480177L 1920 0 Z"
+                     ></animate>
+          </path>
+        
+        </g>
+      </svg>
+</div>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="mt-4 mb-3">Tournaments</h1>
     {% if user.is_staff or user.is_superuser %}

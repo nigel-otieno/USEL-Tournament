@@ -1,0 +1,112 @@
+/* Ensure body and html take up full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+/* Sticky footer for short pages */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Navbar styling with gradient */
+.navbar {
+    background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Dark green, grey, navy */
+    padding: 0.8rem 1.5rem;
+}
+
+.navbar-brand img {
+  height: 3.5rem; /* Adjusts image height to fit well within the navbar */
+  max-height: 4rem;
+  width: auto; /* Maintains aspect ratio */
+}
+
+.navbar-scroll .nav-link,
+.navbar-scroll .navbar-toggler-icon,
+.navbar-scroll .navbar-brand {
+  color: #262626;
+}
+
+/* Navbar color before scroll */
+.navbar-scroll {
+    background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Dark green, grey, navy */
+}
+
+/* Navbar and link color after scroll */
+.navbar-scrolled {
+    background-color: #fff;
+}
+
+.navbar-scrolled .nav-link,
+.navbar-scrolled .navbar-toggler-icon {
+  color: #262626;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+/* Button styling */
+.btn-dark {
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-dark:hover {
+  background-color: #343a40;
+}
+
+/* Scrolling effect */
+.navbar-scrolled .btn-dark {
+  background-color: #4d4d4d; /* Adjusted for darker color after scroll */
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .navbar-brand img {
+    height: 2.5rem;
+  }
+}
+
+/* Footer styling matching navbar */
+.footer {
+  background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Matches the navbar gradient */
+  color: #ffffff; /* White text for contrast */
+  padding: 1rem 0;
+  text-align: center;
+  border-top: 2px solid #4d4d4d; /* Optional accent border */
+}
+
+.footer p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.footer a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #cccccc; /* Subtle grey hover color */
+}
+
+/* Add responsive adjustments */
+@media (max-width: 768px) {
+  .footer p {
+      font-size: 0.9rem;
+  }
+}
