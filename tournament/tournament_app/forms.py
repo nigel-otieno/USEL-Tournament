@@ -1,14 +1,17 @@
 from django import forms
 from .models import *
+from pytz import all_timezones
 
 class TournamentForm(forms.ModelForm):
+
     class Meta:
         model = Tournament
         fields = [
             'name', 'description', 'rules', 'date', 'time', 'location',
-            'rounds', 'game_mode', 'tournament_type', 'image', 'video_url'
+            'rounds', 'game_mode', 'tournament_type', 'image', 'video_url',
         ]
         widgets = {
+            'date': forms.DateInput(format='%m/%d/%Y', attrs={'type': 'text', 'placeholder': 'MM/DD/YYYY', 'class': 'form-control'}),
             'rounds': forms.RadioSelect,
             'game_mode': forms.RadioSelect,
             'tournament_type': forms.RadioSelect, 

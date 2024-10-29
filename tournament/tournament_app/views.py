@@ -182,10 +182,13 @@ class TournamentDetailView(DetailView):
                     team.is_top_three = True
             grouped_teams.extend(group_list)
             rank += len(group_list)
+            
+        formatted_time = tournament.time.strftime("%I:%M %p") if tournament.time else None
 
         context['teams'] = grouped_teams
         context['round_headers'] = range(1, tournament.rounds + 1)
         context['tournament'] = tournament
+        context['formatted_time'] = formatted_time  # Pass the formatted time to the context
         return context
 
 class TeamDetailView(DetailView):

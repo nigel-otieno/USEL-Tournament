@@ -1,14 +1,88 @@
 {% extends 'base_generic.html' %}
-
 {% block title %}Edit Tournament{% endblock %}
-
+{% load static %}
+{% load custom_filters %}
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Tournament: {{ tournament.name }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+    <div class="p-4 mb-5" style="background-color: #f8f9fa; border-radius: 8px;">
+        <h2 class="mb-4">Edit Tournament: {{ tournament.name }}</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <!-- Name Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.name.label_tag }}
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+                
+                <!-- Location Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.location.label_tag }}
+                    {{ form.location|add_class:"form-control" }}
+                </div>
+                
+                <!-- Date Field -->
+                <div class="col-md-4 mb-3">
+                    {{ form.date.label_tag }}
+                    {{ form.date|add_class:"form-control" }}
+                </div>
+
+                <!-- Time Field with AM/PM -->
+                <div class="col-md-4 mb-3">
+                    {{ form.time.label_tag }}
+                    {{ form.time|add_class:"form-control" }}
+                </div>
+
+                <!-- Description Field -->
+                <div class="col-md-12 mb-3">
+                    {{ form.description.label_tag }}
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+
+                <!-- Rules Field -->
+                <div class="col-md-12 mb-3">
+                    {{ form.rules.label_tag }}
+                    {{ form.rules|add_class:"form-control" }}
+                </div>
+
+                <!-- Rounds Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.rounds.label_tag }}
+                    {{ form.rounds }}
+                </div>
+
+                <!-- Game Mode Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.game_mode.label_tag }}
+                    {{ form.game_mode }}
+                </div>
+
+                <!-- Tournament Type Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.tournament_type.label_tag }}
+                    {{ form.tournament_type }}
+                </div>
+
+                <!-- Image Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.image.label_tag }}
+                    {{ form.image|add_class:"form-control" }}
+                </div>
+
+                <!-- Video URL Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.video_url.label_tag }}
+                    {{ form.video_url|add_class:"form-control" }}
+                </div>
+            </div>
+            
+            <div class="text-right">
+                <a href="{% url 'tournament_detail' tournament.id %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
 </div>
+
 {% endblock %}

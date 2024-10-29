@@ -163,14 +163,15 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Date:</strong> {{ tournament.date }}</p>
-                    <p><strong>Time:</strong> {{ tournament.time }}</p>
+                    <p><strong>Date:</strong> {{ tournament.date|date:"m/d/Y" }}</p>
+                    <p><strong>Time:</strong> {{ formatted_time }} {{ timezone_display }}</p>  <!-- Display time with timezone here -->
                     <p><strong>Location:</strong> {{ tournament.location }}</p>
                     <p><strong>Rules:</strong> {{ tournament.rules }}</p>
                     <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
                     <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
                     <p><strong>Tournament Type:</strong> {{ tournament.get_tournament_type_display }}</p>
                 </div>
+                              
                 <div class="col-md-6">
                     {% if tournament.video_url %}
                     <div style="width: 100%; max-width: 100%; height: 100%; margin: auto;">
@@ -223,7 +224,7 @@
                                 {% if team.video_url %}
                                     <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
                                 {% else %}
-                                    No video available
+                                    <p style="text-align:center">Submit video by clicking "View Team Details"</p>
                                 {% endif %}
                             </td>
                             {% if tournament.game_mode == 'HighestScore' %}

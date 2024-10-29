@@ -1,83 +1,88 @@
 {% extends 'base_generic.html' %}
-
 {% block title %}Create Tournament{% endblock %}
+{% load static %}
+{% load custom_filters %}
 
 {% block content %}
-<style>
-    .form-container {
-        max-width: 100%;
-        margin-top: 50px;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 50px; /* Add bottom margin to avoid overlapping footer */
-    }
-    .form-group {
-        width: 100%;
-    }
-    label {
-        font-weight: bold;
-    }
-    .form-control {
-        width: 100%;
-        height: 45px;
-        font-size: 16px;
-    }
-    .btn-primary {
-        width: 100%;
-        font-size: 18px;
-        padding: 10px;
-    }
-    h2 {
-        margin-bottom: 30px;
-    }
-    .alert {
-        padding: 10px;
-        margin-top: 20px;
-        border-radius: 4px;
-    }
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-</style>
+<div class="container mt-5">
+    <div class="p-4 mb-5" style="background-color: #f8f9fa; border-radius: 8px;">
+        <h2 class="mb-4">Create a New Tournament</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <!-- Name Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.name.label_tag }}
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+                
+                <!-- Location Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.location.label_tag }}
+                    {{ form.location|add_class:"form-control" }}
+                </div>
+                
+                <!-- Date Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.date.label_tag }}
+                    {{ form.date|add_class:"form-control" }}
+                </div>
 
-{% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    
-<div class="form-container">
-    <h2>Create a New Tournament</h2>
+                <!-- Time Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.time.label_tag }}
+                    {{ form.time|add_class:"form-control" }}
+                </div>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}
-            <small class="form-text text-muted">{{ field.help_text }}</small>
-            {% endif %}
-            {% if field.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ field.errors }}
+                <!-- Description Field -->
+                <div class="col-md-12 mb-3">
+                    {{ form.description.label_tag }}
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+
+                <!-- Rules Field -->
+                <div class="col-md-12 mb-3">
+                    {{ form.rules.label_tag }}
+                    {{ form.rules|add_class:"form-control" }}
+                </div>
+
+                <!-- Rounds Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.rounds.label_tag }}
+                    {{ form.rounds }}
+                </div>
+
+                <!-- Game Mode Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.game_mode.label_tag }}
+                    {{ form.game_mode }}
+                </div>
+
+                <!-- Tournament Type Field with Radio Select -->
+                <div class="col-md-6 mb-3">
+                    {{ form.tournament_type.label_tag }}
+                    {{ form.tournament_type }}
+                </div>
+
+                <!-- Image Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.image.label_tag }}
+                    {{ form.image|add_class:"form-control" }}
+                </div>
+
+                <!-- Video URL Field -->
+                <div class="col-md-6 mb-3">
+                    {{ form.video_url.label_tag }}
+                    {{ form.video_url|add_class:"form-control" }}
+                </div>
             </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Create Tournament</button>
-    </form>
+            
+            <div class="text-right">
+                <a href="{% url 'tournaments' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Tournament</button>
+            </div>
+        </form>
+    </div>
 </div>
-
 {% endblock %}
