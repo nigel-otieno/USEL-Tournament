@@ -11,6 +11,8 @@ import json
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_duration
+from operator import attrgetter
+from itertools import groupby
 
 @login_required
 def tournament_delete(request, tournament_id):
@@ -137,6 +139,9 @@ class TournamentsView(ListView):
     template_name = 'tournaments.html'
     context_object_name = 'tournaments'
 
+from django.utils.timezone import timedelta
+
+
 class TournamentDetailView(DetailView):
     model = Tournament
     template_name = 'tournament_detail.html'
@@ -144,28 +149,45 @@ class TournamentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tournament = self.get_object()
-        teams = tournament.teams.all()
+        teams = list(tournament.teams.all())  # Convert queryset to list for sorting
         user = self.request.user
 
+        # Calculate total scores and times for each team
         for team in teams:
             team.can_edit = (user == team.created_by) or (user == tournament.created_by)
-
             team.total_score = (
                 (team.score_one or 0) +
                 (team.score_two or 0) +
                 (team.score_three or 0)
             )
-
             team.total_time_score = (
                 (team.time_score_one or timezone.timedelta(seconds=0)) +
                 (team.time_score_two or timezone.timedelta(seconds=0)) +
                 (team.time_score_three or timezone.timedelta(seconds=0))
             )
 
-        context['teams'] = teams
+        # Sort and group teams based on game mode, considering ties
+        if tournament.game_mode == 'HighestScore':
+            teams.sort(key=attrgetter('total_score'), reverse=True)
+        elif tournament.game_mode == 'TimeAttack':
+            teams.sort(key=attrgetter('total_time_score'))
+
+        # Group teams by score or time and identify top 3 rankings, including ties
+        grouped_teams = []
+        rank = 0
+        for score_or_time, group in groupby(teams, key=attrgetter('total_score' if tournament.game_mode == 'HighestScore' else 'total_time_score')):
+            group_list = list(group)
+            if rank < 3:
+                for team in group_list:
+                    team.is_top_three = True
+            grouped_teams.extend(group_list)
+            rank += len(group_list)
+
+        context['teams'] = grouped_teams
         context['round_headers'] = range(1, tournament.rounds + 1)
         context['tournament'] = tournament
         return context
+
 class TeamDetailView(DetailView):
     model = Team
     template_name = 'team_detail.html'

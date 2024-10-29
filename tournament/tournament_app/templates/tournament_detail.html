@@ -213,9 +213,12 @@
                             
                             <!-- Creative styling for team names -->
                             <td class="team-name" data-score="{{ team.total_score }}">
-                                <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for example -->
+                                {% if team.is_top_three %}
+                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 teams -->
+                                {% endif %}
                                 {{ team.name }}
                             </td>
+                            
                             <td>
                                 {% if team.video_url %}
                                     <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
