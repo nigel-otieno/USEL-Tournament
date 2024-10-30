@@ -1,7 +1,8 @@
 # templatetags/custom_filters.py
 from django import template
 from django.utils.safestring import SafeString
-import re
+from django.utils import timezone
+import re, pytz
 
 register = template.Library()
 
@@ -45,4 +46,20 @@ def add_class(value, css_class):
         return value.as_widget(attrs={"class": css_class})
     elif isinstance(value, SafeString):
         return value.replace('class="', f'class="{css_class} ')
+    return value
+
+@register.filter(name='format_time')
+def format_time(value, tz_name='UTC'):
+    """
+    Converts a datetime.time object to the specified timezone and formats it as HH:MM.
+    """
+    try:
+        if value and tz_name:
+            # Get the selected timezone
+            tz = pytz.timezone(tz_name)
+            # Assume the time is naive (without timezone) and localize it to the specified timezone
+            time_in_tz = tz.localize(timezone.datetime.combine(timezone.now().date(), value))
+            return time_in_tz.strftime('%H:%M')
+    except Exception as e:
+        return value  # Return unformatted time if an error occurs
     return value

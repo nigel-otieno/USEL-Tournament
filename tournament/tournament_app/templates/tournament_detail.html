@@ -164,7 +164,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <p><strong>Date:</strong> {{ tournament.date|date:"m/d/Y" }}</p>
-                    <p><strong>Time:</strong> {{ tournament.time }}</p>
+                    <!-- tournament_detail.html -->
+                    <p><strong>Time:</strong> {{ tournament.time|format_time:tournament.timezone }}</p>
+                    <p><strong>Timezone:</strong> {{ tournament.get_timezone_display }}</p>
                     <p><strong>Location:</strong> {{ tournament.location }}</p>
                     <p><strong>Rules:</strong> {{ tournament.rules }}</p>
                     <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
