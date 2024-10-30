@@ -223,7 +223,9 @@
                             
                             <td>
                                 {% if team.video_url %}
+                                <div class="d-flex justify-content-center">
                                     <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
+                                </div>                                
                                 {% else %}
                                     <p style="text-align: center">Submit video by clicking "View Team Details"</p>
                                 {% endif %}
@@ -360,6 +362,19 @@
         } else {
             return '00:00:00';
         }
+    }
+    // Check if this page is one of the target routes to remember
+    const targetRoutes = [
+        '/tournaments/',
+        '/tournament/create/',
+        '/tournament/',
+        '/team/',
+        // Add any additional relevant paths here
+    ];
+    
+    const currentPath = window.location.pathname;
+    if (targetRoutes.some(route => currentPath.startsWith(route))) {
+        localStorage.setItem('lastRelevantRoute', currentPath);
     }
 
     function sortTeams() {

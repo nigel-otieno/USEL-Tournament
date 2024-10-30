@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_duration
 from operator import attrgetter
 from itertools import groupby
+import re
 
 @login_required
 def tournament_delete(request, tournament_id):
@@ -83,6 +84,11 @@ def team_create(request, tournament_id):
 
     return render(request, 'team_create.html', {'form': form, 'tournament': tournament})
 
+YOUTUBE_URL_REGEX = (
+    r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/'
+    r'(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})'
+)
+
 @login_required
 def upload_video(request, team_id):
     team = get_object_or_404(Team, id=team_id)
@@ -91,9 +97,18 @@ def upload_video(request, team_id):
 
     if request.method == 'POST':
         video_url = request.POST.get('video_url')
-        team.video_url = video_url
-        team.save()
-        return redirect('team_detail', pk=team.id)
+        match = re.search(YOUTUBE_URL_REGEX, video_url)
+        
+        if match:
+            # Extract the video ID and convert it to an embeddable format
+            video_id = match.group(6)
+            embeddable_url = f"https://www.youtube.com/embed/{video_id}"
+            team.video_url = embeddable_url
+            team.save()
+            return redirect('team_detail', pk=team.id)
+        else:
+            # If not a valid YouTube URL, handle the error (e.g., by redirecting back or displaying a message)
+            return redirect('team_detail', pk=team.id)
     return redirect('team_detail', pk=team.id)
 
 @login_required

@@ -60,9 +60,16 @@
             {% endif %}
         </p>
         {% if user == team.created_by or user in team.members.all %}
-          <p><strong>Upload Video</strong>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#uploadVideoModal">Upload Video</button>
-          </p>
+          <!-- Button to Open the Modal -->
+          <form id="uploadVideoForm" method="post" action="{% url 'upload_video' team.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="video_url">YouTube Video URL</label>
+                <input type="url" class="form-control" id="video_url" name="video_url" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        
         {% endif %}
         <h3>Players</h3>
         <ul class="list-group">
@@ -77,27 +84,29 @@
         </ul>
     </div>
 </div>
-<!-- Upload Video Modal -->
-<div class="modal fade" id="uploadVideoModal" tabindex="-1" aria-labelledby="uploadVideoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="uploadVideoModalLabel">Upload Video</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="{% url 'upload_video' team.id %}">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="video_url">Video URL</label>
-            <input type="url" class="form-control" id="video_url" name="video_url" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+
 {% endblock %}
+
+<script>
+  // Check if this page is one of the target routes to remember
+  const targetRoutes = [
+      '/tournaments/',
+      '/tournament/create/',
+      '/tournament/',
+      '/team/',
+      // Add any additional relevant paths here
+  ];
+  function submitUploadVideoForm() {
+    // Check if the video URL input is valid before submitting
+    const videoUrlInput = document.getElementById("video_url");
+    if (videoUrlInput.checkValidity()) {
+        document.getElementById("uploadVideoForm").submit();
+    } else {
+        alert("Please enter a valid video URL.");
+    }
+}
+  const currentPath = window.location.pathname;
+  if (targetRoutes.some(route => currentPath.startsWith(route))) {
+      localStorage.setItem('lastRelevantRoute', currentPath);
+  }
+</script>
