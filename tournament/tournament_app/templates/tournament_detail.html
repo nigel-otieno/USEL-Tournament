@@ -164,14 +164,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <p><strong>Date:</strong> {{ tournament.date|date:"m/d/Y" }}</p>
-                    <p><strong>Time:</strong> {{ formatted_time }} {{ timezone_display }}</p>  <!-- Display time with timezone here -->
+                    <p><strong>Time:</strong> {{ tournament.time }}</p>
                     <p><strong>Location:</strong> {{ tournament.location }}</p>
                     <p><strong>Rules:</strong> {{ tournament.rules }}</p>
                     <p><strong>Rounds:</strong> {{ tournament.get_rounds_display }}</p>
                     <p><strong>Game Mode:</strong> {{ tournament.get_game_mode_display }}</p>
                     <p><strong>Tournament Type:</strong> {{ tournament.get_tournament_type_display }}</p>
                 </div>
-                              
                 <div class="col-md-6">
                     {% if tournament.video_url %}
                     <div style="width: 100%; max-width: 100%; height: 100%; margin: auto;">
@@ -212,10 +211,12 @@
                             data-score="{{ team.total_score }}"
                             data-time="{{ team.total_time_score.total_seconds }}">
                             
-                            <!-- Creative styling for team names -->
+                            <!-- Team Name with Conditional Trophy Icon -->
                             <td class="team-name" data-score="{{ team.total_score }}">
-                                {% if team.is_top_three %}
-                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 teams -->
+                                {% if tournament.game_mode == 'HighestScore' and team.is_top_three %}
+                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in HighestScore mode -->
+                                {% elif tournament.game_mode == 'TimeAttack' and team.is_top_three %}
+                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in TimeAttack mode -->
                                 {% endif %}
                                 {{ team.name }}
                             </td>
@@ -224,7 +225,7 @@
                                 {% if team.video_url %}
                                     <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
                                 {% else %}
-                                    <p style="text-align:center">Submit video by clicking "View Team Details"</p>
+                                    <p style="text-align: center">Submit video by clicking "View Team Details"</p>
                                 {% endif %}
                             </td>
                             {% if tournament.game_mode == 'HighestScore' %}
