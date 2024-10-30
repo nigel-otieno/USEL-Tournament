@@ -19,7 +19,7 @@ body {
 
 /* Navbar styling with gradient */
 .navbar {
-    background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Dark green, grey, navy */
+    background: linear-gradient(90deg, #004d27, #6e6e6e, #001f3f); /* Dark green, grey, navy */
     padding: 0.8rem 1.5rem;
 }
 

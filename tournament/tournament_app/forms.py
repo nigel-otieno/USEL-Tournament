@@ -12,6 +12,7 @@ class TournamentForm(forms.ModelForm):
         ]
         widgets = {
             'date': forms.DateInput(format='%m/%d/%Y', attrs={'type': 'text', 'placeholder': 'MM/DD/YYYY', 'class': 'form-control'}),
+            'time': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'class': 'form-control'}),
             'rounds': forms.RadioSelect,
             'game_mode': forms.RadioSelect,
             'tournament_type': forms.RadioSelect, 
