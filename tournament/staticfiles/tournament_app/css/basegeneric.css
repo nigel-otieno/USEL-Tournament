@@ -19,9 +19,14 @@ body {
 
 /* Navbar styling with gradient */
 .navbar {
-    background: linear-gradient(90deg, #004d27, #6e6e6e, #001f3f); /* Dark green, grey, navy */
-    padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Matches the navbar gradient */
+  padding: 0.8rem 1.5rem;
 }
+
+.navbar-scroll {
+  background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Matches the navbar gradient */
+}
+
 
 .navbar-brand img {
   height: 3.5rem; /* Adjusts image height to fit well within the navbar */
@@ -33,11 +38,6 @@ body {
 .navbar-scroll .navbar-toggler-icon,
 .navbar-scroll .navbar-brand {
   color: #262626;
-}
-
-/* Navbar color before scroll */
-.navbar-scroll {
-    background: linear-gradient(90deg, #004d00, #6e6e6e, #001f3f); /* Dark green, grey, navy */
 }
 
 /* Navbar and link color after scroll */

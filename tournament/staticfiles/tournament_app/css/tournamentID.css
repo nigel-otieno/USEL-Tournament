@@ -1,3 +1,4 @@
+/* General Styles */
 .team-icon {
     margin-right: 5px;
 }
@@ -32,15 +33,15 @@ td[contenteditable="true"]:focus {
 
 /* Table Header Styling */
 th {
-    background-color: #f0f0f0; /* Adjusted background color */
-    color: black; /* Set text color to black */
+    background-color: #f0f0f0;
+    color: black;
     padding: 10px;
     text-align: center;
     border-bottom: 2px solid #ddd;
 }
 
 .table thead th {
-    color: black; /* Reinforce black color for all headers */
+    color: black;
     text-align: center;
 }
 
@@ -48,6 +49,7 @@ th {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+/* Dynamic Team Colors */
 .team-name[data-score='1'] {
     background-color: #ffd900; /* Gold */
 }
@@ -69,10 +71,10 @@ th {
     transform: scale(1.1);
 }
 
-/* Center the button group in the column */
+/* Button Group Centering */
 .text-center .button-group {
     display: inline-flex;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
 }
 
 /* Tournament Detail Card Styling */
@@ -92,4 +94,77 @@ th {
 
 .tournamentDetail.card-body {
     padding: 15px;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .team-name {
+        font-size: 14px; /* Smaller font on small screens */
+    }
+
+    .table thead th,
+    td[contenteditable="true"] {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .text-center .button-group {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center;
+    }
+
+    .tournamentDetail.card {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .team-name {
+        padding: 3px;
+        font-size: 12px; /* Further reduction for extra-small screens */
+    }
+
+    th,
+    td {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .button-group {
+        gap: 5px;
+    }
+
+    .tournamentDetail.card {
+        margin-bottom: 10px;
+    }
+}
+
+/* General Button Styling */
+.btn {
+    font-weight: bold;
+    padding: 0.5rem 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05); /* Slight grow on hover for better feedback */
+}
+
+/* Responsive Button Adjustments */
+@media (max-width: 768px) {
+    .btn {
+        margin-bottom: 8px; /* Spacing between stacked buttons */
+        width: 100%; /* Full-width on mobile */
+    }
+}
+
+@media (min-width: 768px) {
+    .w-md-auto {
+        width: auto !important; /* Reset width on larger screens */
+    }
+
+    .me-md-2 {
+        margin-right: 8px;
+    }
 }
