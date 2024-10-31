@@ -4,6 +4,12 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<style>
+    .custom-logo-size {
+        width: 15%; /* Adjust as needed for the ideal size */
+    }
+    
+</style>
 <br>
 <br>
 <!-- SVG Background Wrapper -->
@@ -47,10 +53,11 @@
     <div class="row gx-lg-5">
         <div class="col-lg-7 pt-custom-1">
             <h1 class="display-1 mb-4" >USEL Tournaments</h1>
-            <p class="mb-4">      
+            
+            <p class="mb-4">  <b>    
                 The USEL Tournaments App is your go-to platform for discovering and joining exciting tournaments. 
                 It makes it easy to create teams, compete, and track your progress all in one place. 
-                With a user-friendly design, it’s built to bring teams together for seamless and thrilling competition experiences.
+                With a user-friendly design, it’s built to bring teams together for seamless and thrilling competition experiences.</b>
             </p>
             <a class="btn btn-success btn-rounded btn-lg me-3" href="{% url 'account_login' %}" role="button">Login</a>
             <a class="btn btn-success btn-outline-white btn-rounded btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up</a>
@@ -59,12 +66,21 @@
         <div class="col-lg-4 pt-custom-2">
             <img src="{% static 'tournament_app/images/usel.png' %}" class="w-100 rounded-6 shadow-5-strong" alt="">
         </div>
+
     </div>
 
-    <!-- Accordion Instructions Section -->
-    <div class="text-center mb-5">
-        <h2>Instructions for Using the USEL Tournaments App</h2>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <!-- Left Logo -->
+        {% comment %} <img src="{% static 'tournament_app/images/teamusa.png' %}" class="custom-logo-size rounded-6 shadow-5-strong mx-3" alt="Left Logo"> {% endcomment %}
+        
+        <!-- Header -->
+        <h2 class="text-center m-0"><b>Instructions for Using the USEL Online Tournament</b></h2>
+        
+        <!-- Right Logo -->
+        <img src="{% static 'tournament_app/images/teamusa.png' %}" class="custom-logo-size rounded-6 shadow-5-strong mx-3" alt="Right Logo">
     </div>
+    
+    
     <div class="row">
         <!-- Column 1 -->
         <div class="col-lg-6">
@@ -77,7 +93,7 @@
                         </h5>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-bs-parent="#accordionLeft">
-                        <div class="card-body">At the top of the page, you will see options for Login, Sign Up, and Tournaments. If you do not have a profile, please click Sign Up.</div>
+                        <div style="color:black" class="card-body">At the top of the page, you will see options for Login, Sign Up, and Tournaments. If you do not have a profile, please click Sign Up.</div>
                     </div>
                 </div>
     
@@ -88,7 +104,7 @@
                         </h5>
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionLeft">
-                        <div class="card-body">On the Sign Up page, you will be asked to enter a username, email address, and password. After successfully signing up, you will be redirected to the Sign In page.</div>
+                        <div style="color:black" class="card-body">On the Sign Up page, you will be asked to enter a username, email address, and password. After successfully signing up, you will be redirected to the Sign In page.</div>
                     </div>
                 </div>
     
@@ -99,7 +115,7 @@
                         </h5>
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordionLeft">
-                        <div class="card-body">Once signed in, you will be redirected to the Tournaments page, where a list of tournaments will be displayed.</div>
+                        <div style="color:black" class="card-body">Once signed in, you will be redirected to the Tournaments page, where a list of tournaments will be displayed.</div>
                     </div>
                 </div>
     
@@ -110,7 +126,7 @@
                         </h5>
                     </div>
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-bs-parent="#accordionLeft">
-                        <div class="card-body">If you already have an account, simply click Sign In and enter your credentials to be redirected to the Tournaments page.</div>
+                        <div style="color:black" class="card-body">If you already have an account, simply click Sign In and enter your credentials to be redirected to the Tournaments page.</div>
                     </div>
                 </div>
     
@@ -121,7 +137,7 @@
                         </h5>
                     </div>
                     <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordionLeft">
-                        <div class="card-body">If you would like to view tournaments without creating an account or signing in, click the Tournaments section on the navigation bar.</div>
+                        <div style="color:black" class="card-body">If you would like to view tournaments without creating an account or signing in, click the Tournaments section on the navigation bar.</div>
                     </div>
                 </div>
             </div>
@@ -138,7 +154,7 @@
                         </h5>
                     </div>
                     <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-bs-parent="#accordionRight">
-                        <div class="card-body">After finding the tournament you’d like to participate in, click on the card image of the tournament to go to that specific tournament's page.</div>
+                        <div style="color:black" class="card-body">After finding the tournament you’d like to participate in, click on the card image of the tournament to go to that specific tournament's page.</div>
                     </div>
                 </div>
     
@@ -149,7 +165,7 @@
                         </h5>
                     </div>
                     <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionRight">
-                        <div class="card-body">On the tournament page, click the green Create Team button. Enter the team name and coach’s email, and then see your team in the leaderboard.</div>
+                        <div style="color:black" class="card-body">On the tournament page, click the green Create Team button. Enter the team name and coach’s email, and then see your team in the leaderboard.</div>
                     </div>
                 </div>
     
@@ -160,7 +176,7 @@
                         </h5>
                     </div>
                     <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-bs-parent="#accordionRight">
-                        <div class="card-body">You can add up to a maximum of 3 players to your team in the player section.</div>
+                        <div style="color:black" class="card-body">You can add up to a maximum of 3 players to your team in the player section.</div>
                     </div>
                 </div>
     
@@ -171,7 +187,7 @@
                         </h5>
                     </div>
                     <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-bs-parent="#accordionRight">
-                        <div class="card-body">After adding players, click View Team Details to submit your video entry. Only YouTube or Vimeo links are accepted.</div>
+                        <div style="color:black" class="card-body">After adding players, click View Team Details to submit your video entry. Only YouTube or Vimeo links are accepted.</div>
                     </div>
                 </div>
     
@@ -182,13 +198,14 @@
                         </h5>
                     </div>
                     <div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-bs-parent="#accordionRight">
-                        <div class="card-body">Once you have submitted your video, input your score for the tournament challenge.</div>
+                        <div style="color:black" class="card-body">Once you have submitted your video, input your score for the tournament challenge.</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Bootstrap Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
