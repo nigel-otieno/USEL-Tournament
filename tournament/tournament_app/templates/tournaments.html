@@ -66,8 +66,7 @@
 </div>
 <div class="form-inline-search">
     <input type="text" id="search" class="form-control" placeholder="Search Tournaments..." onkeyup="searchTournaments()">
-</div>
-<div class="row" id="tournament-container">
+</div><div class="row" id="tournament-container">
     {% for tournament in tournaments %}
     <div class="col-md-4 mb-4 tournament-card" data-name="{{ tournament.name }}" data-date="{{ tournament.date }}" data-host="{{ tournament.created_by }}">
         <div class="card">
@@ -77,20 +76,32 @@
                 <img src="{% static 'tournament_app/images/usel.png' %}" class="card-img-top" alt="No Image Available">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title">{{ tournament.name }}</h5>
+                <!-- Tournament Name with Lock/Unlock Icon -->
+                <h5 class="card-title">
+                    {{ tournament.name }}
+                    {% if tournament.closed %}
+                        <i class="fas fa-lock text-danger" title="Tournament Closed"></i>
+                    {% else %}
+                        <i class="fas fa-unlock text-success" title="Tournament Open"></i>
+                    {% endif %}
+                </h5>
+                
                 <p class="card-text"><strong>Tournament Host: </strong> {{ tournament.created_by }}</p>
                 <p><strong>Date:</strong> {{ tournament.date|date:"m/d/Y" }}</p>
-                <p><strong>Time:</strong> {{ tournament.time}} {{ tournament.get_timezone_display }}</p>
+                <p><strong>Time:</strong> {{ tournament.time }} {{ tournament.get_timezone_display }}</p>
                 <p class="card-text"><strong>Location:</strong> {{ tournament.location }}</p>
+                
                 {% if tournament.game_mode %}
-                <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode }}</p> <!-- Added game mode display -->
+                    <p class="card-text"><strong>Game Mode:</strong> {{ tournament.game_mode }}</p>
                 {% endif %}
+                
                 <a href="{% url 'tournament_detail' tournament.id %}" class="btn btn-primary">View Details</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
 <script>
     function sortTournaments() {
         const container = document.getElementById('tournament-container');

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import *
 from .forms import *
@@ -14,6 +15,14 @@ from django.utils.dateparse import parse_duration
 from operator import attrgetter
 from itertools import groupby
 import re
+
+@staff_member_required
+@login_required
+def toggle_tournament_status(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    tournament.closed = not tournament.closed  # Toggle closed status
+    tournament.save()
+    return redirect('tournament_detail', tournament.id)
 
 @login_required
 def tournament_delete(request, tournament_id):

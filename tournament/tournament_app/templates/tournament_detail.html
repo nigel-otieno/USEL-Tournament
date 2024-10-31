@@ -156,10 +156,35 @@
     <div class="card slide-in">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2>{{ tournament.name }}</h2>
-            {% if user.is_authenticated %}
-                <a href="{% url 'team_create' tournament.id %}" class="btn btn-success">Create Team</a>
-            {% endif %}
+            
+            <div class="d-flex align-items-center">
+                <!-- Close/Open Tournament Button for Staff/Admin -->
+                {% if user.is_authenticated and user.is_staff %}
+                    {% if tournament.closed %}
+                        <a href="{% url 'toggle_tournament_status' tournament.id %}" class="btn btn-success me-2">
+                            Open Tournament
+                        </a>
+                    {% else %}
+                        <a href="{% url 'toggle_tournament_status' tournament.id %}" class="btn btn-warning me-2">
+                            Close Tournament
+                        </a>
+                    {% endif %}
+                {% endif %}
+                
+                <!-- Create Team Button -->
+                {% if user.is_authenticated %}
+                    {% if not tournament.closed %}
+                        <a href="{% url 'team_create' tournament.id %}" class="btn btn-success">Create Team</a>
+                    {% else %}
+                        <!-- Display locked icon when tournament is closed -->
+                        <span class="btn btn-secondary disabled">
+                            <i class="fas fa-lock"></i> Tournament Closed
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
+        
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">

@@ -15,4 +15,6 @@ urlpatterns = [
     path('player/<int:pk>/', PlayerDetailView.as_view(), name='player_detail'),
     path('update_team_score/', update_team_score, name='update_team_score'),
     path('update_team_time_score/', update_team_time_score, name='update_team_time_score'),
+    path('tournament/<int:tournament_id>/toggle/', toggle_tournament_status, name='toggle_tournament_status'),
+
 ]

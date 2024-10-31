@@ -42,6 +42,7 @@ class Tournament(models.Model):
     tournament_type = models.CharField(max_length=200, choices=TOURNAMENT_TYPE_CHOICES, default='RoboSports')
     video_url = models.URLField(max_length=500, blank=True, null=True)
     timezone = models.CharField(max_length=500, choices=TIMEZONE_CHOICES, default='UTC')
+    closed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
