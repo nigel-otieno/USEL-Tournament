@@ -27,7 +27,9 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
-        
+              <li class="nav-item">
+                <a class="nav-link text-white" href="https://www.uselyouthrobotics.com/">USEL Website</a>
+              </li>
               {% if user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link text-white" href="{% url 'account_logout' %}">Logout, {{ user.username }}</a>
