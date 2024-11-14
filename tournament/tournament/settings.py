@@ -27,12 +27,11 @@ SECRET_KEY = 'django-insecure-3@1da01furu@fqirbni*7)to^(#1aifjs^jnb%dw7k_a&!315n
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Convert comma-separated ALLOWED_HOSTS to a list
-ALLOWED_HOSTS = []
 # settings.py
-ALLOWED_HOSTS = ['useltournaments.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['useladmin.pythonanywhere.com']
 
 
 # Application definition
@@ -91,7 +90,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  
+    'allauth.account.middleware.AccountMiddleware',
 
 ]
 
