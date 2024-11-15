@@ -63,3 +63,4 @@ def format_time(value, tz_name='UTC'):
     except Exception as e:
         return value  # Return unformatted time if an error occurs
     return value
+

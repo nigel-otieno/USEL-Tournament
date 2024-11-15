@@ -6,8 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 class Tournament(models.Model):
     ROUND_CHOICES = [
         (1, '1 Round'),
-        # (2, '2 Rounds'),
-        # (3, '3 Rounds'),
+        (2, '2 Rounds'),
+        (3, '3 Rounds'),
     ]
     TIMEZONE_CHOICES = [
         ('America/Los_Angeles', 'PST'),

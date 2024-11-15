@@ -231,75 +231,85 @@
                         </tr>
                     </thead>
                     <tbody id="team-table-body">
-                        {% for team in teams %}
-                        <tr class="team-row slide-in" data-name="{{ team.name }}" 
-                            data-score="{{ team.total_score }}"
-                            data-time="{{ team.total_time_score.total_seconds }}">
-                            
-                            <!-- Team Name with Conditional Trophy Icon -->
-                            <td class="team-name" data-score="{{ team.total_score }}">
-                                {% if tournament.game_mode == 'HighestScore' and team.is_top_three %}
-                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in HighestScore mode -->
-                                {% elif tournament.game_mode == 'TimeAttack' and team.is_top_three %}
-                                    <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in TimeAttack mode -->
-                                {% endif %}
-                                {{ team.name }}
-                            </td>
-                            
-                            <td>
-                                {% if team.video_url %}
-                                <div class="d-flex justify-content-center">
-                                    <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
-                                </div>                                
-                                {% else %}
-                                    <p style="text-align: center">Submit video by clicking "View Team Details"</p>
-                                {% endif %}
-                            </td>
-                            {% if tournament.game_mode == 'HighestScore' %}
-                                {% if tournament.rounds >= 1 %}
-                                    {% if team.can_edit and not team.score_one_edited or user == tournament.created_by %}
-                                        <td contenteditable="true" data-team-id="{{ team.id }}" data-field-name="score_one" onkeydown="handleEnter(event)" onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
-                                            {{ team.score_one }}
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            {{ team.score_one }}
-                                            {% if team.score_one_edited %}
-                                                <i class="fa fa-lock lock-icon"></i>
-                                            {% endif %}
-                                        </td>
-                                    {% endif %}
-                                {% endif %}
-                            {% elif tournament.game_mode == 'TimeAttack' %}
-                                {% if tournament.rounds >= 1 %}
-                                    {% if team.can_edit and not team.time_score_one_edited or user == tournament.created_by %}
-                                        <td contenteditable="true" data-team-id="{{ team.id }}" data-field-name="time_score_one" onkeydown="handleEnter(event)" onblur="updateTimeScore('{{ team.id }}', 'time_score_one', this.innerText)">
-                                            {{ team.time_score_one|default:"00:00" }}
-                                        
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            {{ team.time_score_one|default:"00:00" }}
-                                            {% if team.time_score_one_edited %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
-                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-                                              </svg>                                           
-                                               {% endif %}
-                                        </td>
-                                    {% endif %}
-                                {% endif %}
+                    {% for team in teams %}
+                    <tr class="team-row slide-in" data-name="{{ team.name }}" 
+                        data-score="{{ team.total_score }}"
+                        data-time="{{ team.total_time_score.total_seconds }}">
+                        
+                        <!-- Team Name with Conditional Trophy Icon -->
+                        <td class="team-name" data-score="{{ team.total_score }}">
+                            {% if tournament.game_mode == 'HighestScore' and team.is_top_three %}
+                                <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in HighestScore mode -->
+                            {% elif tournament.game_mode == 'TimeAttack' and team.is_top_three %}
+                                <span class="team-icon">&#x1F3C6;</span> <!-- Trophy icon for top 3 in TimeAttack mode -->
                             {% endif %}
-                            <td class="text-center">
-                                <div class="d-flex justify-content-center">
-                                    {% if user == team.created_by and team.members.count < 3 %}
-                                        <a href="{% url 'player_create' team.id %}" class="btn btn-primary btn-sm mr-2 me-2">Add Player</a>
-                                    {% endif %}
-                                    <a href="{% url 'team_detail' team.id %}" class="btn btn-info btn-sm">View Team Details</a>
-                                </div>
-                            </td>                            
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                            {{ team.name }}
+                        </td>
+
+                        <!-- Video URL -->
+                        <td>
+                            {% if team.video_url %}
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ team.video_url }}" target="_blank" class="btn btn-primary btn-sm">View Video</a>
+                            </div>
+                            {% else %}
+                                <p style="text-align: center">Submit video by clicking "View Team Details"</p>
+                            {% endif %}
+                        </td>
+
+                        <!-- Round 1 -->
+                        {% if team.can_edit or user == tournament.created_by %}
+                        <td contenteditable="true" 
+                            data-team-id="{{ team.id }}" 
+                            data-field-name="score_one" 
+                            onblur="updateScore('{{ team.id }}', 'score_one', this.innerText)">
+                            {{ team.score_one }}
+                        </td>
+                        {% else %}
+                        <td>{{ team.score_one }}</td>
+                        {% endif %}
+
+                        <!-- Round 2 (if applicable) -->
+                        {% if tournament.rounds >= 2 %}
+                            {% if team.can_edit or user == tournament.created_by %}
+                            <td contenteditable="true" 
+                                data-team-id="{{ team.id }}" 
+                                data-field-name="score_two" 
+                                onblur="updateScore('{{ team.id }}', 'score_two', this.innerText)">
+                                {{ team.score_two }}
+                            </td>
+                            {% else %}
+                            <td>{{ team.score_two }}</td>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Round 3 (if applicable) -->
+                        {% if tournament.rounds >= 3 %}
+                            {% if team.can_edit or user == tournament.created_by %}
+                            <td contenteditable="true" 
+                                data-team-id="{{ team.id }}" 
+                                data-field-name="score_three" 
+                                onblur="updateScore('{{ team.id }}', 'score_three', this.innerText)">
+                                {{ team.score_three }}
+                            </td>
+                            {% else %}
+                            <td>{{ team.score_three }}</td>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Actions -->
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center">
+                                {% if user == team.created_by and team.members.count < 3 %}
+                                    <a href="{% url 'player_create' team.id %}" class="btn btn-primary btn-sm mr-2 me-2">Add Player</a>
+                                {% endif %}
+                                <a href="{% url 'team_detail' team.id %}" class="btn btn-info btn-sm">View Team Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
                 </table>
             </div>
         </div>

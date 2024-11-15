@@ -12,44 +12,49 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 0;
+        min-height: 100vh;
         padding: 5%;
     }
     .form-container {
-        max-width: 50%;
+        width: 100%;
+        max-width: 500px;
         padding: 20px;
         background-color: #f8f9fa;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .form-group {
-        width: 100%;
-    }
     label {
         font-weight: bold;
     }
     .form-control {
-        width: 100%;
         height: 45px;
         font-size: 16px;
     }
     .btn-primary {
-        width: 100%;
-        font-size: 18px;
+        font-size: 16px;
         padding: 10px;
     }
     h2 {
-        margin-bottom: 30px;
-    }
-    .btn-secondary {
         margin-bottom: 20px;
+        font-size: 24px;
+    }
+    @media (max-width: 576px) {
+        .form-container {
+            padding: 15px;
+        }
+        .btn-primary {
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 20px;
+        }
     }
 </style>
 
-<div class="centered-page">
+<div class="container-fluid centered-page">
     <div class="form-container">
         <h2>{% trans "Sign Up" %}</h2>
-        <p>
+        <p class="text-center">
             {% blocktranslate %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktranslate %}
         </p>
         {% if not SOCIALACCOUNT_ONLY %}
@@ -71,10 +76,11 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary w-100">{% trans "Sign Up" %}</button>
+                <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
             </form>
         {% endif %}
         {% if SOCIALACCOUNT_ENABLED %}
+            <hr>
             {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
         {% endif %}
     </div>

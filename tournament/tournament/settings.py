@@ -27,11 +27,11 @@ SECRET_KEY = 'django-insecure-3@1da01furu@fqirbni*7)to^(#1aifjs^jnb%dw7k_a&!315n
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Convert comma-separated ALLOWED_HOSTS to a list
 # settings.py
-ALLOWED_HOSTS = ['useladmin.pythonanywhere.com']
+# ALLOWED_HOSTS = ['useladmin.pythonanywhere.com']
 
 
 # Application definition
@@ -196,3 +196,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 SITE_ID = 1  # Ensure this is the correct ID for your site
+
+DEFAULT_FROM_EMAIL = "USEngineeringLeague <no-reply@uselyouthrobotics.com>"

@@ -59,8 +59,12 @@
                 It makes it easy to create teams, compete, and track your progress all in one place. 
                 With a user-friendly design, it’s built to bring teams together for seamless and thrilling competition experiences.</b>
             </p>
-            <a class="btn btn-success btn-rounded btn-lg me-3" href="{% url 'account_login' %}" role="button">Login</a>
-            <a class="btn btn-success btn-outline-white btn-rounded btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up</a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-success btn-rounded btn-lg me-3" href="{% url 'tournaments' %}" role="button">Tournaments</a>
+                {% else %}
+                    <a class="btn btn-success btn-rounded btn-lg me-3" href="{% url 'account_login' %}" role="button">Login</a>
+                    <a class="btn btn-success btn-outline-white btn-rounded btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up</a>
+                {% endif %}
         </div>
 
         <div class="col-lg-4 pt-custom-2">
